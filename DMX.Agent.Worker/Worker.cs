@@ -17,9 +17,7 @@ namespace DMX.Agent.Worker
         public Worker(ILogger<Worker> logger) =>
             this.logger = logger;
 
-        protected override Task ExecuteAsync(CancellationToken stoppingToken)
-        {
+        protected override Task ExecuteAsync(CancellationToken stoppingToken) =>
             throw new NotImplementedException();
-        }
     }
 }
