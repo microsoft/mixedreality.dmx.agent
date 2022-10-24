@@ -20,6 +20,9 @@ namespace DMX.Agent.Worker.Brokers.DmxApis
             this.apiClient = GetApiClient(baseUrl);
         }
 
+        private async ValueTask<T> PostAsync<T>(string relativeUrl, T content) =>
+            await this.apiClient.PostContentAsync<T>(relativeUrl, content);
+
         private async ValueTask<T> GetAsync<T>(string relativeUrl) =>
             await this.apiClient.GetContentAsync<T>(relativeUrl);
 
