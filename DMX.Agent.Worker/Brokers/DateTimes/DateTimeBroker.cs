@@ -6,7 +6,7 @@ using System;
 
 namespace DMX.Agent.Worker.Brokers.DateTimes
 {
-    public class DateTimeBroker
+    public class DateTimeBroker : IDateTimeBroker
     {
         public DateTimeOffset GetCurrentDateTimeOffset() =>
             DateTimeOffset.UtcNow;
