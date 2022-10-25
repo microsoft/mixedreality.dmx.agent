@@ -16,6 +16,8 @@ using Newtonsoft.Json;
 using Tynamix.ObjectFiller;
 using Xeptions;
 using Xunit;
+using AzureMessagingCommunicationException = Microsoft.ServiceBus.Messaging.MessagingCommunicationException;
+
 
 namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.LabCommandEvents
 {
@@ -48,6 +50,19 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.LabCommandEvents
                 new UnauthorizedAccessException()
             };
         }
+
+        public static TheoryData MessageQueueDependencyExceptions()
+        {
+            string message = GetRandomString();
+
+            return new TheoryData<Exception>
+            {
+                new InvalidOperationException(),
+                new AzureMessagingCommunicationException(communicationPath: message),
+                new ServerBusyException(message),
+            };
+        }
+
 
         private static string GetRandomString() =>
             new MnemonicString().GetValue();

@@ -53,6 +53,44 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.LabCommandEvents
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
+        [Theory]
+        [MemberData(nameof(MessageQueueDependencyExceptions))]
+        public void ShouldThrowDependencyExceptionOnListenAndLogItAsync(Exception dependencyException)
+        {
+            // given
+            var someLabCommandHandler = new Mock<Func<LabCommand, ValueTask>>();
+
+            var failedLabCommandDependencyException =
+                new FailedLabCommandDependencyException(dependencyException);
+
+            var expectedLabCommandDependencyException =
+                new LabCommandDependencyException(failedLabCommandDependencyException);
+
+            this.queueBrokerMock.Setup(broker =>
+                broker.ListenToLabCommandsQueue(It.IsAny<Func<Message, CancellationToken, Task>>()))
+                    .Throws(dependencyException);
+
+            // when
+            Action listenToLabCommandAction = () =>
+                this.labCommandEventService.ListenToLabCommandEvent(
+                    someLabCommandHandler.Object);
+
+            // then
+            Assert.Throws<LabCommandDependencyException>(listenToLabCommandAction);
+
+            this.queueBrokerMock.Verify(broker =>
+                broker.ListenToLabCommandsQueue(It.IsAny<Func<Message, CancellationToken, Task>>()),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedLabCommandDependencyException))),
+                        Times.Once);
+
+            this.queueBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
         [Fact]
         public void ShouldThrowServiceExceptionOnListenIfServiceErrorOccurredAndLogIt()
         {
