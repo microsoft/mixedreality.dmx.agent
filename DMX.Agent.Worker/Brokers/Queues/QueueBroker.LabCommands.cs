@@ -18,12 +18,12 @@ namespace DMX.Agent.Worker.Brokers.Queues
             MessageHandlerOptions messageHandlerOptions = GetMessageHandlerOptions();
 
             Func<Message, CancellationToken, Task> listenerFunction =
-                CompleteEffortsQueueMessageAsync(eventHandler);
+                CompleteLabCommandsQueueMessageAsync(eventHandler);
 
             this.labCommandQueue.RegisterMessageHandler(listenerFunction, messageHandlerOptions);
         }
 
-        private Func<Message, CancellationToken, Task> CompleteEffortsQueueMessageAsync(
+        private Func<Message, CancellationToken, Task> CompleteLabCommandsQueueMessageAsync(
             Func<Message, CancellationToken, Task> eventHandler)
         {
             return async (message, token) =>

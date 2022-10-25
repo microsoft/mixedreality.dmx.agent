@@ -2,8 +2,11 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ---------------------------------------------------------------
 
-using System.Linq;
+using System;
+using System.Threading.Tasks;
+using DMX.Agent.Worker.Brokers.Loggings;
 using DMX.Agent.Worker.Brokers.Queues;
+using DMX.Agent.Worker.Models.LabCommands;
 
 namespace DMX.Agent.Worker.Services.Foundations.LabCommandEvents
 {
@@ -12,10 +15,15 @@ namespace DMX.Agent.Worker.Services.Foundations.LabCommandEvents
         private readonly IQueueBroker queueBroker;
         private readonly ILoggingBroker loggingBroker;
 
-        
-        public void RecieveLabCommandEvent()
+        public LabCommandEventService(IQueueBroker queueBroker, ILoggingBroker loggingBroker)
         {
-            throw new System.NotImplementedException();
+            this.queueBroker = queueBroker;
+            this.loggingBroker = loggingBroker;
+        }
+
+        public void ListenToLabCommandEvent(Func<LabCommand, ValueTask> labCommandEvent)
+        {
+            throw new NotImplementedException();
         }
     }
 }
