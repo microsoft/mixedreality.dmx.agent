@@ -20,6 +20,10 @@ namespace DMX.Agent.Worker.Services.Foundations.LabCommandEvents
             {
                 returningNothingFunction();
             }
+            catch (NullLabCommandException nullLabCommandException)
+            {
+                throw CreateAndLogValidationException(nullLabCommandException);
+            }
             catch (MessagingEntityNotFoundException messagingEntityNotFoundException)
             {
                 var failedLabCommandDependencyException =
@@ -65,6 +69,14 @@ namespace DMX.Agent.Worker.Services.Foundations.LabCommandEvents
 
                 throw CreateAndLogServiceException(failedLabCommandServiceException);
             }
+        }
+
+        private LabCommandValidationException CreateAndLogValidationException(Xeption exception)
+        {
+            var labCommandValidationException = new LabCommandValidationException(exception);
+            this.loggingBroker.LogError(labCommandValidationException);
+
+            return labCommandValidationException;
         }
 
         private LabCommandDependencyException CreateAndLogDependencyException(Xeption exception)
