@@ -14,12 +14,14 @@ namespace DMX.Agent.Worker.Services.Foundations.LabCommandEvents
 {
     public partial class LabCommandEventService
     {
-        private void ValidateLabCommandIsNotNull(LabCommand labCommand)
+        private void ValidateLabCommandEventHandler(Func<LabCommand, ValueTask> labCommandHandler)
         {
-            if (labCommand is null)
+            if (labCommandHandler is null)
             {
                 throw new NullLabCommandHandlerException();
             }
         }
     }
+
+
 }

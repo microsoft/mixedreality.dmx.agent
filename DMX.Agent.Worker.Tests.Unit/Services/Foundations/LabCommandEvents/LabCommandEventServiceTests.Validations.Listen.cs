@@ -20,10 +20,10 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.LabCommandEvents
         public void ShouldThrowValidationExceptionOnListenIfLabCommandIsNullAndLogIt()
         {
             Func<LabCommand, ValueTask> nullLabCommandHandler = null;
-            var nullLabCommandException = new NullLabCommandHandlerException();
+            var nullLabCommandHandlerException = new NullLabCommandHandlerException();
 
             var expectedLabCommandValidationException =
-                new LabCommandValidationException(nullLabCommandException);
+                new LabCommandValidationException(nullLabCommandHandlerException);
 
             // when
             Action listenToLabCommandAction = () =>
