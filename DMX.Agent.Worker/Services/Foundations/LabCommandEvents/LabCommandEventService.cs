@@ -24,14 +24,15 @@ namespace DMX.Agent.Worker.Services.Foundations.LabCommandEvents
             this.loggingBroker = loggingBroker;
         }
 
-        public void ListenToLabCommandEvent(Func<LabCommand, ValueTask> labCommandEventHandler)
+        public void ListenToLabCommandEvent(Func<LabCommand, ValueTask> labCommandEventHandler) =>
+        TryCatch(() =>
         {
             this.queueBroker.ListenToLabCommandsQueue(async (message, token) =>
             {
                 LabCommand incomingLabCommand = MapToLabCommand(message);
                 await labCommandEventHandler(incomingLabCommand);
             });
-        }
+        });
 
         private static LabCommand MapToLabCommand(Message message)
         {
