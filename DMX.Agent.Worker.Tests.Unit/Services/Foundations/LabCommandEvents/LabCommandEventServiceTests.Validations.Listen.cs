@@ -2,53 +2,50 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ---------------------------------------------------------------
 
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using DMX.Agent.Worker.Models.LabCommands;
 using DMX.Agent.Worker.Models.LabCommands.Exceptions;
-using Moq;
-using System.Threading;
-using System;
-using System.Threading.Tasks;
-using Xunit;
+using FluentAssertions;
 using Microsoft.Azure.ServiceBus;
+using Moq;
+using Xunit;
 
 namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.LabCommandEvents
 {
     public partial class LabCommandEventServiceTests
     {
         [Fact]
-        public void ShouldThrowValidationExceptionOnListenIfLabCommandIsNullAndLogItAsync()
+        public void ShouldThrowValidationExceptionOnListenIfLabCommandIsNullAndLogIt()
         {
-            LabCommand nullLabCommand = null;
-            var someLabCommandHandler = new Mock<Func<LabCommand, ValueTask>>();
-            var nullLabCommandException = new NullLabCommandException();
+            Func<LabCommand, ValueTask> nullLabCommandHandler = null;
+            var nullLabCommandException = new NullLabCommandHandlerException();
 
             var expectedLabCommandValidationException =
                 new LabCommandValidationException(nullLabCommandException);
 
-            Message labCommandMessage =
-                CreateLabCommandMessage(nullLabCommand);
-
-            this.queueBrokerMock.Setup(broker =>
-                broker.ListenToLabCommandsQueue(It.IsAny<Func<Message, CancellationToken, Task>>()))
-                    .Callback<Func<Message, CancellationToken, Task>>(eventFunction =>
-                        eventFunction.Invoke(labCommandMessage, It.IsAny<CancellationToken>()));
-
             // when
             Action listenToLabCommandAction = () =>
                 this.labCommandEventService.ListenToLabCommandEvent(
-                    someLabCommandHandler.Object);
+                    nullLabCommandHandler);
+
+            LabCommandValidationException actualLabCommandValidationException =
+                Assert.Throws<LabCommandValidationException>(listenToLabCommandAction);
 
             // then
-            Assert.Throws<LabCommandValidationException>(listenToLabCommandAction);
-
-            this.queueBrokerMock.Verify(broker =>
-                broker.ListenToLabCommandsQueue(It.IsAny<Func<Message, CancellationToken, Task>>()),
-                    Times.Once);
+            actualLabCommandValidationException.Should().BeEquivalentTo(
+                expectedLabCommandValidationException);
 
             this.loggingBrokerMock.Verify(broker =>
-                broker.LogCritical(It.Is(SameExceptionAs(
+                broker.LogError(It.Is(SameExceptionAs(
                     expectedLabCommandValidationException))),
                         Times.Once);
+
+            this.queueBrokerMock.Verify(broker =>
+                broker.ListenToLabCommandsQueue(
+                    It.IsAny<Func<Message, CancellationToken, Task>>()),
+                        Times.Never);
 
             this.queueBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();

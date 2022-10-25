@@ -18,7 +18,7 @@ namespace DMX.Agent.Worker.Services.Foundations.LabCommandEvents
         {
             if (labCommand is null)
             {
-                throw new NullLabCommandException();
+                throw new NullLabCommandHandlerException();
             }
         }
     }

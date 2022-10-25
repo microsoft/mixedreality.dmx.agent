@@ -20,7 +20,7 @@ namespace DMX.Agent.Worker.Services.Foundations.LabCommandEvents
             {
                 returningNothingFunction();
             }
-            catch (NullLabCommandException nullLabCommandException)
+            catch (NullLabCommandHandlerException nullLabCommandException)
             {
                 throw CreateAndLogValidationException(nullLabCommandException);
             }

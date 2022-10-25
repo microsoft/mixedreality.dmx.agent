@@ -6,10 +6,10 @@ using Xeptions;
 
 namespace DMX.Agent.Worker.Models.LabCommands.Exceptions
 {
-    public class NullLabCommandException : Xeption
+    public class NullLabCommandHandlerException : Xeption
     {
-        public NullLabCommandException() :
-            base(message: "Lab Command is null")
+        public NullLabCommandHandlerException() :
+            base(message: "Lab Command handler is null")
         { }
     }
 }

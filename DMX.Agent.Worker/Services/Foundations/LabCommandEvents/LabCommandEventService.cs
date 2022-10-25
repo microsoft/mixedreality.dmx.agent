@@ -31,7 +31,6 @@ namespace DMX.Agent.Worker.Services.Foundations.LabCommandEvents
             this.queueBroker.ListenToLabCommandsQueue(async (message, token) =>
             {
                 LabCommand incomingLabCommand = MapToLabCommand(message);
-                ValidateLabCommandIsNotNull(incomingLabCommand);
                 await labCommandEventHandler(incomingLabCommand);
             });
         });
