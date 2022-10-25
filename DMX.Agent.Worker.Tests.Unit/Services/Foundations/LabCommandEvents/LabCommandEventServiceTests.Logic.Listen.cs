@@ -15,7 +15,7 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.LabCommandEvents
     public partial class LabCommandEventServiceTests
     {
         [Fact]
-        public void ShouldListenToLabCommandEventAsync()
+        public void ShouldListenToLabCommandEvent()
         {
             // given
             var labCommandEventHandlerMock =
@@ -48,6 +48,7 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.LabCommandEvents
                         Times.Once);
 
             this.queueBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }
 }

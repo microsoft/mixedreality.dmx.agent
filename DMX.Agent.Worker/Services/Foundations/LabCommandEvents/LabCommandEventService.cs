@@ -3,10 +3,13 @@
 // ---------------------------------------------------------------
 
 using System;
+using System.Text;
 using System.Threading.Tasks;
 using DMX.Agent.Worker.Brokers.Loggings;
 using DMX.Agent.Worker.Brokers.Queues;
 using DMX.Agent.Worker.Models.LabCommands;
+using Microsoft.Azure.ServiceBus;
+using Newtonsoft.Json;
 
 namespace DMX.Agent.Worker.Services.Foundations.LabCommandEvents
 {
@@ -21,9 +24,25 @@ namespace DMX.Agent.Worker.Services.Foundations.LabCommandEvents
             this.loggingBroker = loggingBroker;
         }
 
-        public void ListenToLabCommandEvent(Func<LabCommand, ValueTask> labCommandEvent)
+        public void ListenToLabCommandEvent(Func<LabCommand, ValueTask> labCommandEventHandler)
         {
-            throw new NotImplementedException();
+            this.queueBroker.ListenToLabCommandsQueue(async (message, token) =>
+            {
+                LabCommand incomingLabCommand = MapToLabCommand(message);
+                await labCommandEventHandler(incomingLabCommand);
+            });
+        }
+
+        private static LabCommand MapToLabCommand(Message message)
+        {
+            var stringifiedLabCommand =
+                    Encoding.UTF8.GetString(message.Body);
+
+            var labCommandEvent =
+                JsonConvert.DeserializeObject<LabCommand>(
+                    stringifiedLabCommand);
+
+            return labCommandEvent;
         }
     }
 }
