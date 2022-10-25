@@ -15,6 +15,7 @@ using Moq;
 using Newtonsoft.Json;
 using Tynamix.ObjectFiller;
 using Xeptions;
+using Xunit;
 
 namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.LabCommandEvents
 {
@@ -35,6 +36,21 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.LabCommandEvents
                 queueBroker: this.queueBrokerMock.Object,
                 loggingBroker: this.loggingBrokerMock.Object);
         }
+
+        public static TheoryData MessageQueueExceptions()
+        {
+            string message = GetRandomString();
+
+            return new TheoryData<Exception>
+            {
+                new MessagingEntityNotFoundException(message),
+                new MessagingEntityDisabledException(message),
+                new UnauthorizedAccessException()
+            };
+        }
+
+        private static string GetRandomString() =>
+            new MnemonicString().GetValue();
 
         private static Message CreateLabCommandMessage(LabCommand labCommand)
         {
