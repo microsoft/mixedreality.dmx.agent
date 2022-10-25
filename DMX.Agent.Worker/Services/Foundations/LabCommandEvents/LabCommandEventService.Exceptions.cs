@@ -6,6 +6,7 @@ using System;
 using DMX.Agent.Worker.Models.LabCommands.Exceptions;
 using Microsoft.Azure.ServiceBus;
 using Xeptions;
+using AzureMessagingCommunicationException = Microsoft.ServiceBus.Messaging.MessagingCommunicationException;
 
 namespace DMX.Agent.Worker.Services.Foundations.LabCommandEvents
 {
@@ -40,6 +41,24 @@ namespace DMX.Agent.Worker.Services.Foundations.LabCommandEvents
 
                 throw CreateAndLogCriticalDependencyException(failedLabCommandDependencyException);
             }
+            catch (InvalidOperationException InvalidOperationException)
+            {
+                var failedLabCommandDependencyException = new FailedLabCommandDependencyException(InvalidOperationException);
+
+                throw CreateAndLogDependencyException(failedLabCommandDependencyException);
+            }
+            catch (AzureMessagingCommunicationException AzureMessagingCommunicationException)
+            {
+                var failedLabCommandDependencyException = new FailedLabCommandDependencyException(AzureMessagingCommunicationException);
+
+                throw CreateAndLogDependencyException(failedLabCommandDependencyException);
+            }
+            catch (ServerBusyException ServerBusyException)
+            {
+                var failedLabCommandDependencyException = new FailedLabCommandDependencyException(ServerBusyException);
+
+                throw CreateAndLogDependencyException(failedLabCommandDependencyException);
+            }
             catch (Exception exception)
             {
                 var failedLabCommandServiceException = new FailedLabCommandServiceException(exception);
@@ -48,7 +67,15 @@ namespace DMX.Agent.Worker.Services.Foundations.LabCommandEvents
             }
         }
 
-        private Exception CreateAndLogCriticalDependencyException(Xeption exception)
+        private LabCommandDependencyException CreateAndLogDependencyException(Xeption exception)
+        {
+            var labCommandDependencyException = new LabCommandDependencyException(exception);
+            this.loggingBroker.LogError(labCommandDependencyException);
+
+            return labCommandDependencyException;
+        }
+
+        private LabCommandDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
         {
             var labCommandDependencyException = new LabCommandDependencyException(exception);
             this.loggingBroker.LogCritical(labCommandDependencyException);
@@ -56,7 +83,7 @@ namespace DMX.Agent.Worker.Services.Foundations.LabCommandEvents
             return labCommandDependencyException;
         }
 
-        private Xeption CreateAndLogServiceException(Xeption exception)
+        private LabCommandServiceException CreateAndLogServiceException(Xeption exception)
         {
             var labCommandServiceException = new LabCommandServiceException(exception);
             this.loggingBroker.LogError(labCommandServiceException);
