@@ -14,6 +14,7 @@ using Microsoft.Azure.ServiceBus;
 using Moq;
 using Newtonsoft.Json;
 using Tynamix.ObjectFiller;
+using Xeptions;
 
 namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.LabCommandEvents
 {
@@ -45,6 +46,10 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.LabCommandEvents
                 Body = labCommandBody
             };
         }
+
+        private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+            actualException => actualException.SameExceptionAs(expectedException);
+            
 
         private static LabCommand CreateRandomLabCommand() =>
             CreateLabCommandFiller(GetRandomDateTimeOffset()).Create();
