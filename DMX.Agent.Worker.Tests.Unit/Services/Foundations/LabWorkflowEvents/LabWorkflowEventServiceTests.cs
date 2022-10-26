@@ -16,6 +16,7 @@ using Microsoft.Azure.ServiceBus;
 using Moq;
 using Newtonsoft.Json;
 using Tynamix.ObjectFiller;
+using Xeptions;
 
 namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.LabWorkflowEvents
 {
@@ -41,6 +42,10 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.LabWorkflowEvents
             return actualLabWorkflow =>
                 this.compareLogic.Compare(expectedLabWorkflow, actualLabWorkflow).AreEqual;
         }
+
+        private Expression<Func<Exception, bool>> SameExceptionAs(Xeption expectedException) =>
+            actualException => actualException.SameExceptionAs(expectedException);
+
 
         private static Message CreateLabWorkflowMessage(LabWorkflow labWorkflow)
         {

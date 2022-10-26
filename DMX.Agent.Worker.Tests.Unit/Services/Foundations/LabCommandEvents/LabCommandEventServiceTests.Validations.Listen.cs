@@ -17,8 +17,9 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.LabCommandEvents
     public partial class LabCommandEventServiceTests
     {
         [Fact]
-        public void ShouldThrowValidationExceptionOnListenIfLabCommandIsNullAndLogIt()
+        public void ShouldThrowValidationExceptionOnListenIfLabCommandHandlerIsNullAndLogIt()
         {
+            // given
             Func<LabCommand, ValueTask> nullLabCommandHandler = null;
             var nullLabCommandHandlerException = new NullLabCommandHandlerException();
 
