@@ -3,10 +3,13 @@
 // ---------------------------------------------------------------
 
 using System;
+using System.Text;
 using System.Threading.Tasks;
 using DMX.Agent.Worker.Brokers.Loggings;
 using DMX.Agent.Worker.Brokers.Queues;
 using DMX.Agent.Worker.Models.LabWorkflows;
+using Microsoft.Azure.ServiceBus;
+using Newtonsoft.Json;
 
 namespace DMX.Agent.Worker.Services.Foundations.LabWorkflowEvents
 {
@@ -25,7 +28,23 @@ namespace DMX.Agent.Worker.Services.Foundations.LabWorkflowEvents
 
         public void ListenToLabWorkflowEvent(Func<LabWorkflow, ValueTask> labWorkflowEventHandler)
         {
-            throw new NotImplementedException();
+            this.queueBroker.ListenToLabWorkflowsQueue(async (message, token) =>
+            {
+                LabWorkflow incomingLabWorkflow = MapToLabWorkflow(message);
+                await labWorkflowEventHandler(incomingLabWorkflow);
+            });
+        }
+
+        private static LabWorkflow MapToLabWorkflow(Message message)
+        {
+            var stringifiedLabWorkflow =
+                Encoding.UTF8.GetString(message.Body);
+
+            var labWorkflowEvent =
+                JsonConvert.DeserializeObject<LabWorkflow>(
+                    stringifiedLabWorkflow);
+
+            return labWorkflowEvent;
         }
     }
 }

@@ -14,6 +14,7 @@ using DMX.Agent.Worker.Services.Foundations.LabWorkflowEvents;
 using KellermanSoftware.CompareNetObjects;
 using Microsoft.Azure.ServiceBus;
 using Moq;
+using Newtonsoft.Json;
 using Tynamix.ObjectFiller;
 
 namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.LabWorkflowEvents
@@ -35,12 +36,15 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.LabWorkflowEvents
                 this.loggingBrokerMock.Object);
         }
 
-        private Expression<Func<LabWorkflow, bool>> SameLabWorkflowAs(LabWorkflow expectedLabWorkflow) =>
-            actualLabWorkflow => this.compareLogic.Compare(expectedLabWorkflow, actualLabWorkflow).AreEqual;
+        private Expression<Func<LabWorkflow, bool>> SameLabWorkflowAs(LabWorkflow expectedLabWorkflow) 
+        {
+            return actualLabWorkflow =>
+                this.compareLogic.Compare(expectedLabWorkflow, actualLabWorkflow).AreEqual;
+        }
 
         private static Message CreateLabWorkflowMessage(LabWorkflow labWorkflow)
         {
-            string serializedLabWorkflow = JsonSerializer.Serialize(labWorkflow);
+            string serializedLabWorkflow = JsonConvert.SerializeObject(labWorkflow);
 
             byte[] labWorkflowBody = Encoding.UTF8.GetBytes(serializedLabWorkflow);
 
