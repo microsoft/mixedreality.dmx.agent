@@ -4,14 +4,16 @@
 
 using System;
 using System.Linq.Expressions;
-using DMX.Agent.Worker.Brokers.DateTimes;
+using System.Net.Http;
 using DMX.Agent.Worker.Brokers.DmxApis;
 using DMX.Agent.Worker.Brokers.Loggings;
 using DMX.Agent.Worker.Models.Foundations.LabWorkflowCommands;
 using DMX.Agent.Worker.Services.Foundations.LabWorkflowCommands;
 using Moq;
+using RESTFulSense.Exceptions;
 using Tynamix.ObjectFiller;
 using Xeptions;
+using Xunit;
 
 namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.LabWorkflowCommands
 {
@@ -31,8 +33,25 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.LabWorkflowCommands
                 loggingBroker: this.loggingBrokerMock.Object);
         }
 
+        public static TheoryData CriticalDependencyException()
+        {
+            string someMessage = GetRandomString();
+            var someResponseMessage = new HttpResponseMessage();
+
+            return new TheoryData<Xeption>()
+            {
+                new HttpResponseUrlNotFoundException(someResponseMessage, someMessage),
+                new HttpResponseUnauthorizedException(someResponseMessage, someMessage),
+                new HttpResponseForbiddenException(someResponseMessage, someMessage)
+            };
+        }
+
         private static LabWorkflowCommand CreateRandomLabWorkflowCommand() =>
             CreateLabWorkflowCommandFiller(GetRandomDateTimeOffset()).Create();
+
+        private static string GetRandomString() =>
+            new MnemonicString().GetValue();
+
 
         private static DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
