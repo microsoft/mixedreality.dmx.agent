@@ -2,10 +2,9 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ---------------------------------------------------------------
 
-using System;
 using Xeptions;
 
-namespace DMX.Agent.Worker.Models.LabCommands.Exceptions
+namespace DMX.Agent.Worker.Models.Foundations.LabCommands.Exceptions
 {
     public class LabCommandServiceException : Xeption
     {
