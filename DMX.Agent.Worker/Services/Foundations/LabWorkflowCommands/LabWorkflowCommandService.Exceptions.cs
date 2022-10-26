@@ -23,6 +23,10 @@ namespace DMX.Agent.Worker.Services.Foundations.LabWorkflowCommands
             {
                 throw CreateAndLogValidationException(nullLabWorkflowCommandException);
             }
+            catch (InvalidLabWorkflowCommandException invalidLabWorkflowCommandException)
+            {
+                throw CreateAndLogValidationException(invalidLabWorkflowCommandException);
+            }
         }
 
         private LabWorkflowCommandValidationException CreateAndLogValidationException(Xeption exception)
