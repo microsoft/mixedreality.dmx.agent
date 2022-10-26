@@ -4,7 +4,7 @@
 
 using System;
 using System.Threading.Tasks;
-using DMX.Agent.Worker.Models.LabCommands;
+using DMX.Agent.Worker.Models.Foundations.LabCommands;
 
 namespace DMX.Agent.Worker.Services.Foundations.LabCommandEvents
 {

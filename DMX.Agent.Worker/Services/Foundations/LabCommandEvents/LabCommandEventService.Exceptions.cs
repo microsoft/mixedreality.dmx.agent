@@ -3,7 +3,7 @@
 // ---------------------------------------------------------------
 
 using System;
-using DMX.Agent.Worker.Models.LabCommands.Exceptions;
+using DMX.Agent.Worker.Models.Foundations.LabCommands.Exceptions;
 using Microsoft.Azure.ServiceBus;
 using Xeptions;
 using AzureMessagingCommunicationException = Microsoft.ServiceBus.Messaging.MessagingCommunicationException;

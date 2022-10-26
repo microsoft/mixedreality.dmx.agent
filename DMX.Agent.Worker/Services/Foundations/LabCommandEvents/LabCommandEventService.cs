@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DMX.Agent.Worker.Brokers.Loggings;
 using DMX.Agent.Worker.Brokers.Queues;
-using DMX.Agent.Worker.Models.LabCommands;
+using DMX.Agent.Worker.Models.Foundations.LabCommands;
 using Microsoft.Azure.ServiceBus;
 using Newtonsoft.Json;
 
