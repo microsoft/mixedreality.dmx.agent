@@ -3,6 +3,7 @@
 // ---------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Net.Http;
 using DMX.Agent.Worker.Brokers.DmxApis;
@@ -49,9 +50,11 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.LabWorkflowCommands
         private static LabWorkflowCommand CreateRandomLabWorkflowCommand() =>
             CreateLabWorkflowCommandFiller(GetRandomDateTimeOffset()).Create();
 
+        private static Dictionary<string, List<string>> CreateRandomDictionary() =>
+            CreateDictionaryFiller().Create();
+
         private static string GetRandomString() =>
             new MnemonicString().GetValue();
-
 
         private static DateTimeOffset GetRandomDateTimeOffset() =>
             new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
@@ -66,6 +69,10 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.LabWorkflowCommands
 
             return filler;
         }
+
+        private static Filler<Dictionary<string, List<string>>> CreateDictionaryFiller() =>
+            new Filler<Dictionary<string, List<string>>>();
+
         private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
             actualException => actualException.SameExceptionAs(expectedException);
     }

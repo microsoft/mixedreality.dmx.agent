@@ -3,6 +3,8 @@
 // ---------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using DMX.Agent.Worker.Models.Foundations.LabWorkflowCommands;
 using DMX.Agent.Worker.Models.Foundations.LabWorkflowCommands.Exceptions;
@@ -54,6 +56,60 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.LabWorkflowCommands
             this.dmxApiBrokerMock.Verify(broker =>
                 broker.PutLabWorkflowCommandAsync(It.IsAny<LabWorkflowCommand>()),
                     Times.Once);
+
+            this.dmxApiBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowDependencyValidationExceptionOnModifyIfBadRequestErrorOccursAndLogItAsync()
+        {
+            // given
+            LabWorkflowCommand someLabWorkflowCommand = CreateRandomLabWorkflowCommand();
+            var httpMessage = new HttpResponseMessage();
+            string randomMessage = GetRandomString();
+            Dictionary<string, List<string>> randomDictionary = CreateRandomDictionary();
+
+            var httpBadRequestException =
+                new HttpResponseBadRequestException(
+                    httpMessage, 
+                    randomMessage);
+
+            httpBadRequestException.AddData(randomDictionary);
+
+            var invalidLabWorkflowCommandException =
+                new InvalidLabWorkflowCommandException(
+                    httpBadRequestException,
+                    randomDictionary);
+
+            var expectedLabWorkflowCommandDependencyValidationException =
+                new LabWorkflowCommandDependencyValidationException(invalidLabWorkflowCommandException);
+
+            this.dmxApiBrokerMock.Setup(broker =>
+                broker.PutLabWorkflowCommandAsync(It.IsAny<LabWorkflowCommand>()))
+                    .ThrowsAsync(httpBadRequestException);
+
+            // when
+            ValueTask<LabWorkflowCommand> modifedLabWorkflowCommandTask =
+                this.labWorkflowCommandService.ModifyLabWorkflowCommandAsync(someLabWorkflowCommand);
+
+            LabWorkflowCommandDependencyValidationException actualLabWorkflowCommandDependencyValidationException =
+                await Assert.ThrowsAsync<LabWorkflowCommandDependencyValidationException>(
+                    modifedLabWorkflowCommandTask.AsTask);
+
+            // then
+            actualLabWorkflowCommandDependencyValidationException.Should().BeEquivalentTo(
+                expectedLabWorkflowCommandDependencyValidationException);
+
+            this.dmxApiBrokerMock.Verify(broker =>
+                broker.PutLabWorkflowCommandAsync(
+                    It.IsAny<LabWorkflowCommand>()),
+                        Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedLabWorkflowCommandDependencyValidationException))),
+                        Times.Once);
 
             this.dmxApiBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
