@@ -4,6 +4,7 @@
 
 using System.Threading.Tasks;
 using DMX.Agent.Worker.Models.Foundations.LabWorkflowCommands;
+using DMX.Agent.Worker.Models.Foundations.LabWorkflowCommands.Exceptions;
 using FluentAssertions;
 using Force.DeepCloner;
 using Moq;
@@ -27,8 +28,13 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.LabWorkflowCommands
                     .ReturnsAsync(updatedLabWorkflowCommand);
 
             // when
-            LabWorkflowCommand actualLabWorkflowCommand =
-                await this.labWorkflowCommandService.ModifyLabWorkflowCommandAsync(inputLabWorkflowCommand);
+            ValueTask<LabWorkflowCommand> modifyLabWorfklowCommandTask =
+                this.labWorkflowCommandService.ModifyLabWorkflowCommandAsync(inputLabWorkflowCommand);
+
+            LabWorkflowCommandValidationException actualLabWorkflowCommandValidationException =
+                await Assert.ThrowsAsync<LabWorkflowCommandValidationException>(
+                    modifyLabWorfklowCommandTask.AsTask);
+
 
             // then
             actualLabWorkflowCommand.Should().BeEquivalentTo(expectedLabWorkflowCommand);

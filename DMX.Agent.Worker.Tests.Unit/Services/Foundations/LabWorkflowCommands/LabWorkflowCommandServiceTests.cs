@@ -3,6 +3,7 @@
 // ---------------------------------------------------------------
 
 using System;
+using System.Linq.Expressions;
 using DMX.Agent.Worker.Brokers.DateTimes;
 using DMX.Agent.Worker.Brokers.DmxApis;
 using DMX.Agent.Worker.Brokers.Loggings;
@@ -10,6 +11,7 @@ using DMX.Agent.Worker.Models.Foundations.LabWorkflowCommands;
 using DMX.Agent.Worker.Services.Foundations.LabWorkflowCommands;
 using Moq;
 using Tynamix.ObjectFiller;
+using Xeptions;
 
 namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.LabWorkflowCommands
 {
@@ -45,5 +47,7 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.LabWorkflowCommands
 
             return filler;
         }
+        private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+            actualException => actualException.SameExceptionAs(expectedException);
     }
 }
