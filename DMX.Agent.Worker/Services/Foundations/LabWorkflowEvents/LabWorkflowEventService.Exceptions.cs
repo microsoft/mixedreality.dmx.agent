@@ -6,6 +6,7 @@ using System;
 using DMX.Agent.Worker.Models.LabWorkflows.Exceptions;
 using Microsoft.Azure.ServiceBus;
 using Xeptions;
+using AzureMessagingCommunicationException = Microsoft.ServiceBus.Messaging.MessagingCommunicationException;
 
 namespace DMX.Agent.Worker.Services.Foundations.LabWorkflowEvents
 {
@@ -44,6 +45,35 @@ namespace DMX.Agent.Worker.Services.Foundations.LabWorkflowEvents
 
                 throw CreateAndLogCriticalDependencyException(failedLabWorkflowDependencyException);
             }
+            catch (InvalidOperationException invalidOperationException)
+            {
+                var failedLabWorkflowDependencyException =
+                    new FailedLabWorkflowDependencyException(invalidOperationException);
+
+                throw CreateAndLogDependencyException(failedLabWorkflowDependencyException);
+            }
+            catch (AzureMessagingCommunicationException azureMessagingCommunicationException)
+            {
+                var failedLabWorkflowDependencyException =
+                    new FailedLabWorkflowDependencyException(azureMessagingCommunicationException);
+
+                throw CreateAndLogDependencyException(failedLabWorkflowDependencyException);
+            }
+            catch (ServerBusyException serverBusyException)
+            {
+                var failedLabWorkflowDependencyException =
+                    new FailedLabWorkflowDependencyException(serverBusyException);
+
+                throw CreateAndLogDependencyException(failedLabWorkflowDependencyException);
+            }
+        }
+
+        private LabWorkflowDependencyException CreateAndLogDependencyException(Xeption exception)
+        {
+            var labWorkflowDependencyException = new LabWorkflowDependencyException(exception);
+            this.loggingBroker.LogError(labWorkflowDependencyException);
+
+            return labWorkflowDependencyException;
         }
 
         private LabWorkflowDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
@@ -59,7 +89,7 @@ namespace DMX.Agent.Worker.Services.Foundations.LabWorkflowEvents
         private LabWorkflowValidationException CreateAndLogValidationException(Xeption exception)
         {
             var labWorkflowValidationException =
-                new LabWorkflowValidationException(exception); 
+                new LabWorkflowValidationException(exception);
 
             this.loggingBroker.LogError(labWorkflowValidationException);
 
