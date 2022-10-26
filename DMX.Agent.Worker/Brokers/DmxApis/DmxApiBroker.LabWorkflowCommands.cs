@@ -13,5 +13,8 @@ namespace DMX.Agent.Worker.Brokers.DmxApis
 
         public async ValueTask<LabWorkflowCommand> PostLabWorkflowCommandAsync(LabWorkflowCommand labWorkflowCommand) =>
             await PostAsync(LabWorkflowCommandsRelativeUrl, labWorkflowCommand);
+
+        public async ValueTask<LabWorkflowCommand> PutLabWorkflowCommandAsync(LabWorkflowCommand labWorkflowCommand) =>
+            await PutAsync(LabWorkflowCommandsRelativeUrl, labWorkflowCommand);
     }
 }
