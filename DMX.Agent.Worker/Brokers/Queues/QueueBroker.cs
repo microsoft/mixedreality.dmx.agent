@@ -17,8 +17,11 @@ namespace DMX.Agent.Worker.Brokers.Queues
             InitializeQueue();
         }
 
-        private void InitializeQueue() =>
+        private void InitializeQueue()
+        {
             this.labCommandQueue = GetQueueClient(nameof(this.labCommandQueue));
+            this.labWorkflowQueue = GetQueueClient(nameof(this.labWorkflowQueue));
+        }
 
         private MessageHandlerOptions GetMessageHandlerOptions()
         {
