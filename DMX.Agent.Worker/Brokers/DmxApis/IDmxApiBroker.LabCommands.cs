@@ -12,5 +12,6 @@ namespace DMX.Agent.Worker.Brokers.DmxApis
     {
         ValueTask<LabCommand> PostLabCommandAsync(LabCommand labCommand);
         ValueTask<LabCommand> GetLabCommandByIdAsync(Guid id);
+        ValueTask<LabCommand> PutLabCommandAsync(LabCommand labCommand);
     }
 }

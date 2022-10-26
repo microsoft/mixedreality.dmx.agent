@@ -2,6 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ---------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
 using DMX.Agent.Worker.Models.Foundations.LabWorkflowCommands;
 
@@ -13,6 +14,9 @@ namespace DMX.Agent.Worker.Brokers.DmxApis
 
         public async ValueTask<LabWorkflowCommand> PostLabWorkflowCommandAsync(LabWorkflowCommand labWorkflowCommand) =>
             await PostAsync(LabWorkflowCommandsRelativeUrl, labWorkflowCommand);
+
+        public async ValueTask<LabWorkflowCommand> GetLabWorkflowCommandByIdAsync(Guid labWorkflowId) =>
+            await GetAsync<LabWorkflowCommand>($"{LabWorkflowCommandsRelativeUrl}/{labWorkflowId}");
 
         public async ValueTask<LabWorkflowCommand> PutLabWorkflowCommandAsync(LabWorkflowCommand labWorkflowCommand) =>
             await PutAsync(LabWorkflowCommandsRelativeUrl, labWorkflowCommand);
