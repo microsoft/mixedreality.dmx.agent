@@ -63,7 +63,6 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.LabCommandEvents
             };
         }
 
-
         private static string GetRandomString() =>
             new MnemonicString().GetValue();
 

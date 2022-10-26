@@ -4,9 +4,7 @@
 
 using System;
 using System.Linq.Expressions;
-using System.Security.Cryptography;
 using System.Text;
-using System.Text.Json;
 using DMX.Agent.Worker.Brokers.Loggings;
 using DMX.Agent.Worker.Brokers.Queues;
 using DMX.Agent.Worker.Models.LabWorkflows;
@@ -18,6 +16,7 @@ using Newtonsoft.Json;
 using Tynamix.ObjectFiller;
 using Xeptions;
 using Xunit;
+using AzureMessagingCommunicationException = Microsoft.ServiceBus.Messaging.MessagingCommunicationException;
 
 namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.LabWorkflowEvents
 {
@@ -47,6 +46,18 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.LabWorkflowEvents
                 new MessagingEntityNotFoundException(message),
                 new MessagingEntityDisabledException(message),
                 new UnauthorizedAccessException()
+            };
+        }
+
+        public static TheoryData MessageQueueDependencyExceptions()
+        {
+            string message = GetRandomString();
+
+            return new TheoryData<Exception>
+            {
+                new InvalidOperationException(),
+                new AzureMessagingCommunicationException(communicationPath: message),
+                new ServerBusyException(message),
             };
         }
 
