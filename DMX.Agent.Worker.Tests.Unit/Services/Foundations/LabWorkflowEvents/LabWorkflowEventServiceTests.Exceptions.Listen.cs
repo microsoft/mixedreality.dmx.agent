@@ -101,5 +101,49 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.LabWorkflowEvents
             this.queueBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public void ShouldThrowServiceExceptionAndLogIt()
+        {
+            // given
+            var eventHandlerMock = new Mock<Func<LabWorkflow, ValueTask>>();
+            var exception = new Exception();
+
+            var failedLabWorkflowServiceException =
+                new FailedLabWorkflowServiceException(exception);
+
+            var expectedLabWorkflowServiceException =
+                new LabWorkflowServiceException(failedLabWorkflowServiceException);
+
+            this.queueBrokerMock.Setup(broker =>
+                broker.ListenToLabWorkflowsQueue(
+                    It.IsAny<Func<Message, CancellationToken, Task>>()))
+                        .Throws(exception);
+
+            // when
+            Action listenToLabWorkflowEvent = () =>
+                this.labWorkflowEventService.ListenToLabWorkflowEvent(
+                    eventHandlerMock.Object);
+
+            LabWorkflowServiceException actualLabWorkflowServiceException =
+                Assert.Throws<LabWorkflowServiceException>(listenToLabWorkflowEvent);
+
+            // then
+            actualLabWorkflowServiceException.Should().BeEquivalentTo(
+                expectedLabWorkflowServiceException);
+
+            this.queueBrokerMock.Verify(broker =>
+                broker.ListenToLabWorkflowsQueue(
+                    It.IsAny<Func<Message, CancellationToken, Task>>()),
+                        Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedLabWorkflowServiceException))),
+                        Times.Once);
+
+            this.queueBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
