@@ -25,7 +25,7 @@ namespace DMX.Agent.Worker.Services.Foundations.LabWorkflowCommands
         public ValueTask<LabWorkflowCommand> ModifyLabWorkflowCommandAsync(LabWorkflowCommand labWorkflowCommand) =>
         TryCatch(async () =>
         {
-            ValidateLabWorkflowOnModify(labWorkflowCommand);
+            ValidateLabWorkflowCommandIsNotNull(labWorkflowCommand);
 
             return await this.dmxApiBroker.PutLabWorkflowCommandAsync(labWorkflowCommand);
         });
