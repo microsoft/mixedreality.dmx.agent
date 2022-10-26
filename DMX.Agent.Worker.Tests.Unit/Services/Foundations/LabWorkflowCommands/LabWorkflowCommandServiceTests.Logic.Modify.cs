@@ -28,13 +28,8 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.LabWorkflowCommands
                     .ReturnsAsync(updatedLabWorkflowCommand);
 
             // when
-            ValueTask<LabWorkflowCommand> modifyLabWorfklowCommandTask =
-                this.labWorkflowCommandService.ModifyLabWorkflowCommandAsync(inputLabWorkflowCommand);
-
-            LabWorkflowCommandValidationException actualLabWorkflowCommandValidationException =
-                await Assert.ThrowsAsync<LabWorkflowCommandValidationException>(
-                    modifyLabWorfklowCommandTask.AsTask);
-
+            LabWorkflowCommand actualLabWorkflowCommand =
+                await this.labWorkflowCommandService.ModifyLabWorkflowCommandAsync(inputLabWorkflowCommand);
 
             // then
             actualLabWorkflowCommand.Should().BeEquivalentTo(expectedLabWorkflowCommand);
