@@ -66,6 +66,14 @@ namespace DMX.Agent.Worker.Services.Foundations.LabWorkflowEvents
 
                 throw CreateAndLogDependencyException(failedLabWorkflowDependencyException);
             }
+            catch (Exception exception)
+            {
+                var failedLabWorkflowServiceException =
+                    new FailedLabWorkflowServiceException(exception);
+
+                throw CreateAndLogServiceException(failedLabWorkflowServiceException);
+
+            }
         }
 
         private LabWorkflowDependencyException CreateAndLogDependencyException(Xeption exception)
@@ -94,6 +102,16 @@ namespace DMX.Agent.Worker.Services.Foundations.LabWorkflowEvents
             this.loggingBroker.LogError(labWorkflowValidationException);
 
             return labWorkflowValidationException;
+        }
+
+        private Exception CreateAndLogServiceException(Xeption exception)
+        {
+            var labWorkflowServiceException =
+                new LabWorkflowServiceException(exception);
+
+            this.loggingBroker.LogError(labWorkflowServiceException);
+
+            return labWorkflowServiceException;
         }
     }
 }
