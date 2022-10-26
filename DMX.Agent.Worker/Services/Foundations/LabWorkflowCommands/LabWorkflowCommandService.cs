@@ -2,7 +2,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ---------------------------------------------------------------
 
-using System;
 using System.Threading.Tasks;
 using DMX.Agent.Worker.Brokers.DmxApis;
 using DMX.Agent.Worker.Brokers.Loggings;
@@ -23,9 +22,7 @@ namespace DMX.Agent.Worker.Services.Foundations.LabWorkflowCommands
             this.loggingBroker = loggingBroker;
         }
 
-        public ValueTask<LabWorkflowCommand> ModifyLabWorkflowCommandAsync(LabWorkflowCommand labWorkflowCommand)
-        {
-            throw new NotImplementedException();
-        }
+        public ValueTask<LabWorkflowCommand> ModifyLabWorkflowCommandAsync(LabWorkflowCommand labWorkflowCommand) =>
+            this.dmxApiBroker.PutLabWorkflowCommandAsync(labWorkflowCommand);
     }
 }
