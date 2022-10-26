@@ -2,6 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ---------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
 using DMX.Agent.Worker.Models.Foundations.LabWorkflowCommands;
 using DMX.Agent.Worker.Models.Foundations.LabWorkflowCommands.Exceptions;
@@ -94,6 +95,48 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.LabWorkflowCommands
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedLabWorkflowCommandDependencyException))),
+                        Times.Once());
+
+            this.dmxApiBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnModifyIfErrorOccursAndLogItAsync()
+        {
+            // given
+            LabWorkflowCommand someLabWorkflowCommand = CreateRandomLabWorkflowCommand();
+            var serviceException = new Exception();
+
+            var failedLabWorkflowCommandServiceException =
+                new FailedLabWorkflowCommandServiceException(serviceException);
+
+            var expectedLabWorkflowCommandServiceException =
+                new LabWorkflowCommandServiceException(failedLabWorkflowCommandServiceException);
+
+            this.dmxApiBrokerMock.Setup(broker =>
+                broker.PutLabWorkflowCommandAsync(It.IsAny<LabWorkflowCommand>()))
+                    .ThrowsAsync(serviceException);
+
+            // when
+            ValueTask<LabWorkflowCommand> modifyLabWorkflowCommandTask =
+                this.labWorkflowCommandService.ModifyLabWorkflowCommandAsync(someLabWorkflowCommand);
+
+            LabWorkflowCommandServiceException actualLabWorkflowCommandServiceException =
+                await Assert.ThrowsAsync<LabWorkflowCommandServiceException>(
+                    modifyLabWorkflowCommandTask.AsTask);
+
+            // then
+            actualLabWorkflowCommandServiceException.Should()
+                .BeEquivalentTo(expectedLabWorkflowCommandServiceException);
+
+            this.dmxApiBrokerMock.Verify(broker =>
+                broker.PutLabWorkflowCommandAsync(It.IsAny<LabWorkflowCommand>()),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedLabWorkflowCommandServiceException))),
                         Times.Once());
 
             this.dmxApiBrokerMock.VerifyNoOtherCalls();
