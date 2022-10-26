@@ -10,5 +10,6 @@ namespace DMX.Agent.Worker.Brokers.DmxApis
     public partial interface IDmxApiBroker
     {
         ValueTask<LabWorkflowCommand> PostLabWorkflowCommandAsync(LabWorkflowCommand labWorkflowCommand);
+        ValueTask<LabWorkflowCommand> PutLabWorkflowCommandAsync(LabWorkflowCommand labWorkflowCommand);
     }
 }
