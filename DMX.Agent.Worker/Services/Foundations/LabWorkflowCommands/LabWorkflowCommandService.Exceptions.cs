@@ -50,6 +50,15 @@ namespace DMX.Agent.Worker.Services.Foundations.LabWorkflowCommands
 
                 throw CreateAndLogCriticalDependencyException(failedLabWorkflowCommandDependencyException);
             }
+            catch (HttpResponseBadRequestException httpResponseBadRequestException)
+            {
+                var invalidLabWorkflowCommandException =
+                    new InvalidLabWorkflowCommandException(
+                        httpResponseBadRequestException,
+                        httpResponseBadRequestException.Data);
+
+                throw CreateAndLogDependencyValidationException(invalidLabWorkflowCommandException);
+            }
             catch (HttpResponseException httpResponseException)
             {
                 var failedLabWorkflowCommandDependencyException =
@@ -84,6 +93,16 @@ namespace DMX.Agent.Worker.Services.Foundations.LabWorkflowCommands
             this.loggingBroker.LogCritical(labWorkflowCommandDependencyException);
 
             return labWorkflowCommandDependencyException;
+        }
+
+        private LabWorkflowCommandDependencyValidationException CreateAndLogDependencyValidationException(Xeption exception)
+        {
+            var labWorkflowCommandDependencyValidationException =
+                new LabWorkflowCommandDependencyValidationException(exception);
+
+            this.loggingBroker.LogError(labWorkflowCommandDependencyValidationException);
+
+            return labWorkflowCommandDependencyValidationException;
         }
 
         private LabWorkflowCommandDependencyException CreateAndLogDependencyException(Xeption exception)
