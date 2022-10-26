@@ -72,7 +72,7 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.LabWorkflowCommands
 
             var httpBadRequestException =
                 new HttpResponseBadRequestException(
-                    httpMessage, 
+                    httpMessage,
                     randomMessage);
 
             httpBadRequestException.AddData(randomDictionary);

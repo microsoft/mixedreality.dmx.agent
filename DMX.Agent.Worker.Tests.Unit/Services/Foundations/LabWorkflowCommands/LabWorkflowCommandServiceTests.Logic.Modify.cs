@@ -4,7 +4,6 @@
 
 using System.Threading.Tasks;
 using DMX.Agent.Worker.Models.Foundations.LabWorkflowCommands;
-using DMX.Agent.Worker.Models.Foundations.LabWorkflowCommands.Exceptions;
 using FluentAssertions;
 using Force.DeepCloner;
 using Moq;
