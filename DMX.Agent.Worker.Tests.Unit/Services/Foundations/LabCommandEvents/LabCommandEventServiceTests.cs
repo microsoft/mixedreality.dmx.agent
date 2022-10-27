@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 using System.Text;
 using DMX.Agent.Worker.Brokers.Loggings;
 using DMX.Agent.Worker.Brokers.Queues;
-using DMX.Agent.Worker.Models.LabCommands;
+using DMX.Agent.Worker.Models.Foundations.LabCommands;
 using DMX.Agent.Worker.Services.Foundations.LabCommandEvents;
 using KellermanSoftware.CompareNetObjects;
 using Microsoft.Azure.ServiceBus;
@@ -79,7 +79,7 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.LabCommandEvents
 
         private static Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
             actualException => actualException.SameExceptionAs(expectedException);
-            
+
 
         private static LabCommand CreateRandomLabCommand() =>
             CreateLabCommandFiller(GetRandomDateTimeOffset()).Create();

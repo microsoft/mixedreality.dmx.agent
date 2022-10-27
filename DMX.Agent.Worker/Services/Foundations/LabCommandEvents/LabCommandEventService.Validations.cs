@@ -3,12 +3,9 @@
 // ---------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using DMX.Agent.Worker.Models.LabCommands;
-using DMX.Agent.Worker.Models.LabCommands.Exceptions;
+using DMX.Agent.Worker.Models.Foundations.LabCommands;
+using DMX.Agent.Worker.Models.Foundations.LabCommands.Exceptions;
 
 namespace DMX.Agent.Worker.Services.Foundations.LabCommandEvents
 {

@@ -2,9 +2,9 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ---------------------------------------------------------------
 
-using DMX.Agent.Worker.Models.LabCommands;
-using System.Threading.Tasks;
 using System;
+using System.Threading.Tasks;
+using DMX.Agent.Worker.Models.Foundations.LabCommands;
 
 namespace DMX.Agent.Worker.Brokers.DmxApis
 {
@@ -12,5 +12,6 @@ namespace DMX.Agent.Worker.Brokers.DmxApis
     {
         ValueTask<LabCommand> PostLabCommandAsync(LabCommand labCommand);
         ValueTask<LabCommand> GetLabCommandByIdAsync(Guid id);
+        ValueTask<LabCommand> PutLabCommandAsync(LabCommand labCommand);
     }
 }

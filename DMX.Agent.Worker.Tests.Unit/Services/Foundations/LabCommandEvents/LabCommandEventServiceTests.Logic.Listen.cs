@@ -5,7 +5,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using DMX.Agent.Worker.Models.LabCommands;
+using DMX.Agent.Worker.Models.Foundations.LabCommands;
 using Microsoft.Azure.ServiceBus;
 using Moq;
 using Xunit;
