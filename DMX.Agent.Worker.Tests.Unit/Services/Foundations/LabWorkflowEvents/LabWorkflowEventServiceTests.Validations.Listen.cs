@@ -2,14 +2,14 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ---------------------------------------------------------------
 
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using DMX.Agent.Worker.Models.LabWorkflows;
 using DMX.Agent.Worker.Models.LabWorkflows.Exceptions;
 using FluentAssertions;
 using Microsoft.Azure.ServiceBus;
 using Moq;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using Xunit;
 
 
@@ -24,7 +24,7 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.LabWorkflowEvents
             Func<LabWorkflow, ValueTask> nullLabWorkflowHandler = null;
             var nullLabWorkflowHandlerException = new NullLabWorkflowHandlerException();
 
-            var expectedLabWorkflowValidationException = 
+            var expectedLabWorkflowValidationException =
                 new LabWorkflowValidationException(nullLabWorkflowHandlerException);
 
             // when

@@ -64,7 +64,7 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.LabWorkflowEvents
         private static string GetRandomString() =>
             new MnemonicString().GetValue();
 
-        private Expression<Func<LabWorkflow, bool>> SameLabWorkflowAs(LabWorkflow expectedLabWorkflow) 
+        private Expression<Func<LabWorkflow, bool>> SameLabWorkflowAs(LabWorkflow expectedLabWorkflow)
         {
             return actualLabWorkflow =>
                 this.compareLogic.Compare(expectedLabWorkflow, actualLabWorkflow).AreEqual;

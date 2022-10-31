@@ -2,10 +2,10 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ---------------------------------------------------------------
 
-using DMX.Agent.Worker.Models.Foundations.LabWorkflowCommands;
-using DMX.Agent.Worker.Models.LabWorkflows;
 using System;
 using System.Text.Json.Serialization;
+using DMX.Agent.Worker.Models.Foundations.LabWorkflowCommands;
+using DMX.Agent.Worker.Models.LabWorkflows;
 
 namespace DMX.Agent.Worker.Models.LabWorkflowCommands
 {
