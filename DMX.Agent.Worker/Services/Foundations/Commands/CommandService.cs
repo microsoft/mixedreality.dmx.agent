@@ -21,9 +21,7 @@ namespace DMX.Agent.Worker.Services.Foundations.Commands
             this.loggingBroker = loggingBroker;
         }
 
-        public ValueTask<string> ExecuteCommandAsync(string command)
-        {
-            throw new System.NotImplementedException();
-        }
+        public ValueTask<string> ExecuteCommandAsync(string command) =>
+            this.commandBroker.RunCommandAsync(command);
     }
 }
