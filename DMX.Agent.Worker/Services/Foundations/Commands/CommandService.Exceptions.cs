@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Threading.Tasks;
 using DMX.Agent.Worker.Models.Commands;
 using DMX.Agent.Worker.Models.Foundations.Commands;
+using DMX.Agent.Worker.Models.Foundations.Commands.Exceptions;
 using Xeptions;
 
 namespace DMX.Agent.Worker.Services.Foundations.Commands
@@ -46,6 +47,13 @@ namespace DMX.Agent.Worker.Services.Foundations.Commands
 
                 throw CreateAndLogDependencyException(failedCommandDependencyException);
             }
+            catch(InvalidOperationException invalidOprationException)
+            {
+                var failedCommandDependencyValidationException =
+                    new FailedCommandDependencyValidationException(invalidOprationException);
+
+                throw CreateAndLogDependencyValidationException(failedCommandDependencyValidationException);
+            }
             catch (SystemException systemException)
             {
                 var failedCommandDependencyException =
@@ -53,6 +61,14 @@ namespace DMX.Agent.Worker.Services.Foundations.Commands
 
                 throw CreateAndLogDependencyException(failedCommandDependencyException);
             }
+        }
+
+        private CommandDependencyValidationException CreateAndLogDependencyValidationException(Xeption exception)
+        {
+            var commandDependencyValidationException = new CommandDependencyValidationException(exception);
+            this.loggingBroker.LogError(commandDependencyValidationException);
+
+            return commandDependencyValidationException;
         }
 
         private CommandValidationException CreateAndLogValidationException(Xeption exception)
