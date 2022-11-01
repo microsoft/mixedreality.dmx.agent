@@ -7,9 +7,11 @@ using DMX.Agent.Worker.Brokers.Loggings;
 using DMX.Agent.Worker.Services.Foundations.Commands;
 using Moq;
 using System;
+using System.ComponentModel;
 using System.Linq.Expressions;
 using Tynamix.ObjectFiller;
 using Xeptions;
+using Xunit;
 
 namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Commands
 {
@@ -27,6 +29,27 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Commands
             this.commandService = new CommandService(
                 this.commandBrokerMock.Object,
                 this.loggingBrokerMock.Object);
+        }
+
+        public static TheoryData DependencyExceptions()
+        {
+            string randomMessage = GetRandomString();
+
+            return new TheoryData<Exception>
+            {
+                new Win32Exception(),
+                new ObjectDisposedException(randomMessage),
+                new PlatformNotSupportedException(),
+                new SystemException(),
+            };
+        }
+
+        public static TheoryData DependencyValidationExceptions()
+        {
+            return new TheoryData<Exception>
+            {
+                new InvalidOperationException(),
+            };
         }
 
         private Expression<Func<Exception, bool>> SameExceptionAs(Xeption expectedException) =>
