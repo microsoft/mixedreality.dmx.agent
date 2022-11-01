@@ -5,11 +5,6 @@
 using DMX.Agent.Worker.Models.Commands;
 using FluentAssertions;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -17,13 +12,15 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Commands
 {
     public partial class CommandServiceTests
     {
-        [Fact]
-        public async Task ShouldThrowValidationExceptionIfCommandIsNullAndLogItAsync()
+        [Theory]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData(null)]
+        public async Task ShouldThrowValidationExceptionIfCommandIsNullAndLogItAsync(string emptyInputString)
         {
             // given
-            string randomString = GetRandomString();
-            string inputCommandString = randomString;
-            var nullCommandException = new NullCommandException();
+            string inputCommandString = emptyInputString;
+            var nullCommandException = new EmptyCommandException();
 
             var expectedCommandValidationException =
                 new CommandValidationException(nullCommandException);

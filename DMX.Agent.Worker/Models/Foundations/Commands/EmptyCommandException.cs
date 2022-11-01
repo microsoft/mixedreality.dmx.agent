@@ -6,10 +6,10 @@ using Xeptions;
 
 namespace DMX.Agent.Worker.Models.Commands
 {
-    public class NullCommandException : Xeption
+    public class EmptyCommandException : Xeption
     {
-        public NullCommandException()
-            : base(message: "Command is null.")
+        public EmptyCommandException()
+            : base(message: "Command is empty.")
         { }
     }
 }

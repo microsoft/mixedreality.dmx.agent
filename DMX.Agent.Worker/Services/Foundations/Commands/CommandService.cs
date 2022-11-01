@@ -8,7 +8,7 @@ using DMX.Agent.Worker.Brokers.Loggings;
 
 namespace DMX.Agent.Worker.Services.Foundations.Commands
 {
-    public class CommandService : ICommandService
+    public partial class CommandService : ICommandService
     {
         private readonly ICommandBroker commandBroker;
         private readonly ILoggingBroker loggingBroker;
@@ -22,6 +22,10 @@ namespace DMX.Agent.Worker.Services.Foundations.Commands
         }
 
         public ValueTask<string> ExecuteCommandAsync(string command) =>
-            this.commandBroker.RunCommandAsync(command);
+            TryCatch(async () =>
+            {
+                ValidateIfStringIsNull(command);
+                return await this.commandBroker.RunCommandAsync(command);
+            });
     }
 }
