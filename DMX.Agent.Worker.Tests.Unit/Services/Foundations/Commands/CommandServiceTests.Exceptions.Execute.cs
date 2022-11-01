@@ -102,5 +102,48 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Commands
             this.commandBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionIfServiceErrorOccursAndLogItAsync()
+        {
+            // given
+            string randomString = GetRandomString();
+            string inputCommandString = randomString;
+            var exception = new Exception();
+
+            var failedCommandServiceException =
+                new FailedCommandServiceException(exception);
+
+            var expectedCommandServiceException =
+                new CommandServiceException(failedCommandServiceException);
+
+            this.commandBrokerMock.Setup(broker =>
+                broker.RunCommandAsync(It.IsAny<string>()))
+                    .ThrowsAsync(exception);
+
+            // when
+            ValueTask<string> executeCommandTask =
+                this.commandService.ExecuteCommandAsync(inputCommandString);
+
+            CommandServiceException actualCommandServiceException =
+                await Assert.ThrowsAsync<CommandServiceException>(
+                    executeCommandTask.AsTask);
+
+            // then
+            actualCommandServiceException.Should().BeEquivalentTo(
+                expectedCommandServiceException);
+
+            this.commandBrokerMock.Verify(broker =>
+                broker.RunCommandAsync(It.IsAny<string>()),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedCommandServiceException))),
+                        Times.Once);
+
+            this.commandBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }

@@ -5,7 +5,7 @@
 using System;
 using Xeptions;
 
-namespace DMX.Agent.Worker.Models.Foundations.Commands
+namespace DMX.Agent.Worker.Models.Foundations.Commands.Exceptions
 {
     public class FailedCommandDependencyException : Xeption
     {

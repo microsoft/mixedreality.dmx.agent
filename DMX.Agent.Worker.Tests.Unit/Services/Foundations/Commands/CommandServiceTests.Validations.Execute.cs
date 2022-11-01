@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ---------------------------------------------------------------
 
-using DMX.Agent.Worker.Models.Commands;
+using DMX.Agent.Worker.Models.Foundations.Commands.Exceptions;
 using FluentAssertions;
 using Moq;
 using System.Threading.Tasks;

@@ -4,7 +4,7 @@
 
 using Xeptions;
 
-namespace DMX.Agent.Worker.Models.Commands
+namespace DMX.Agent.Worker.Models.Foundations.Commands.Exceptions
 {
     public class CommandValidationException : Xeption
     {

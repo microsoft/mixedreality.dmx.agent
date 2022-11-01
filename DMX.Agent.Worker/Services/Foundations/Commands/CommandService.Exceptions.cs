@@ -5,7 +5,6 @@
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using DMX.Agent.Worker.Models.Commands;
 using DMX.Agent.Worker.Models.Foundations.Commands;
 using DMX.Agent.Worker.Models.Foundations.Commands.Exceptions;
 using Xeptions;
