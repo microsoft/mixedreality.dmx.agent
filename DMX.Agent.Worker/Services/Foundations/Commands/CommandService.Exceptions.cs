@@ -3,8 +3,10 @@
 // ---------------------------------------------------------------
 
 using System;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using DMX.Agent.Worker.Models.Commands;
+using DMX.Agent.Worker.Models.Foundations.Commands;
 using Xeptions;
 
 namespace DMX.Agent.Worker.Services.Foundations.Commands
@@ -23,6 +25,34 @@ namespace DMX.Agent.Worker.Services.Foundations.Commands
             {
                 throw CreateAndLogValidationException(emptyCommandException);
             }
+            catch (Win32Exception win32Exception)
+            {
+                var failedCommandDependencyException =
+                    new FailedCommandDependencyException(win32Exception);
+
+                throw CreateAndLogDependencyException(failedCommandDependencyException);
+            }
+            catch (ObjectDisposedException objectDisposedException)
+            {
+                var failedCommandDependencyException =
+                    new FailedCommandDependencyException(objectDisposedException);
+
+                throw CreateAndLogDependencyException(failedCommandDependencyException);
+            }
+            catch (PlatformNotSupportedException platformNotSupportedException)
+            {
+                var failedCommandDependencyException =
+                    new FailedCommandDependencyException(platformNotSupportedException);
+
+                throw CreateAndLogDependencyException(failedCommandDependencyException);
+            }
+            catch (SystemException systemException)
+            {
+                var failedCommandDependencyException =
+                    new FailedCommandDependencyException(systemException);
+
+                throw CreateAndLogDependencyException(failedCommandDependencyException);
+            }
         }
 
         private CommandValidationException CreateAndLogValidationException(Xeption exception)
@@ -31,6 +61,14 @@ namespace DMX.Agent.Worker.Services.Foundations.Commands
             this.loggingBroker.LogError(commandValidationException);
 
             return commandValidationException;
+        }
+
+        private CommandDependencyException CreateAndLogDependencyException(Xeption exception)
+        {
+            var commandDependencyException = new CommandDependencyException(exception);
+            this.loggingBroker.LogError(commandDependencyException);
+
+            return commandDependencyException;
         }
     }
 }

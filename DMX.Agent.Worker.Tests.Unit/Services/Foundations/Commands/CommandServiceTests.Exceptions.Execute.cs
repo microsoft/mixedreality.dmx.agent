@@ -16,7 +16,8 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Commands
     {
         [Theory]
         [MemberData(nameof(DependencyExceptions))]
-        public async Task ShouldThrowDependencyExceptionAndLogItAsync(Exception dependencyException)
+        public async Task ShouldThrowDependencyExceptionAndLogItAsync(
+            Exception dependencyException)
         {
             // given
             string randomString = GetRandomString();
