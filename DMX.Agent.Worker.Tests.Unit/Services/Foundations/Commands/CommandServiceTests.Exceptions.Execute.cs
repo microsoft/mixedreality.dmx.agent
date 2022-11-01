@@ -5,6 +5,7 @@
 using System;
 using System.Threading.Tasks;
 using DMX.Agent.Worker.Models.Foundations.Commands;
+using DMX.Agent.Worker.Models.Foundations.Commands.Exceptions;
 using FluentAssertions;
 using Force.DeepCloner;
 using Moq;
@@ -52,6 +53,50 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Commands
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedCommandDependencyException))),
+                        Times.Once);
+
+            this.commandBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Theory]
+        [MemberData(nameof(DependencyValidationExceptions))]
+        public async Task ShouldThrowDependencyValidationExceptionIfDependencyValidationErrorOccursAndLogItAsync(
+            Exception dependencyValidationException)
+        {
+            // given
+            string randomString = GetRandomString();
+            string inputCommandString = randomString;
+
+            var failedCommandDependencyValidationException =
+                new FailedCommandDependencyValidationException(dependencyValidationException);
+
+            var expectedCommandDependencyValidationException = 
+                new CommandDependencyValidationException(failedCommandDependencyValidationException);
+
+            this.commandBrokerMock.Setup(broker =>
+                broker.RunCommandAsync(It.IsAny<string>()))
+                    .ThrowsAsync(dependencyValidationException);
+
+            // when
+            ValueTask<string> executeCommandTask =
+                this.commandService.ExecuteCommandAsync(inputCommandString);
+
+            CommandDependencyValidationException actualCommandDependencyValidationException =
+                await Assert.ThrowsAsync<CommandDependencyValidationException>(
+                    executeCommandTask.AsTask);
+
+            // then
+            actualCommandDependencyValidationException.Should().BeEquivalentTo(
+                expectedCommandDependencyValidationException);
+
+            this.commandBrokerMock.Verify(broker =>
+                broker.RunCommandAsync(It.IsAny<string>()),
+                    Times.Once);
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedCommandDependencyValidationException))),
                         Times.Once);
 
             this.commandBrokerMock.VerifyNoOtherCalls();
