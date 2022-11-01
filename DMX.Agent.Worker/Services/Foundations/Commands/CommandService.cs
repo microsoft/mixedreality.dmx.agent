@@ -22,10 +22,10 @@ namespace DMX.Agent.Worker.Services.Foundations.Commands
         }
 
         public ValueTask<string> ExecuteCommandAsync(string command) =>
-            TryCatch(async () =>
-            {
-                ValidateIfStringIsNull(command);
-                return await this.commandBroker.RunCommandAsync(command);
-            });
+        TryCatch(async () =>
+        {
+            ValidateIfStringIsNull(command);
+            return await this.commandBroker.RunCommandAsync(command);
+        });
     }
 }

@@ -60,6 +60,13 @@ namespace DMX.Agent.Worker.Services.Foundations.Commands
 
                 throw CreateAndLogDependencyException(failedCommandDependencyException);
             }
+            catch (Exception exception)
+            {
+                var failedCommandServiceException =
+                    new FailedCommandServiceException(exception);
+
+                throw CreateAndLogServiceException(failedCommandServiceException);
+            }
         }
 
         private CommandDependencyValidationException CreateAndLogDependencyValidationException(Xeption exception)
@@ -84,6 +91,16 @@ namespace DMX.Agent.Worker.Services.Foundations.Commands
             this.loggingBroker.LogError(commandDependencyException);
 
             return commandDependencyException;
+        }
+
+        private Exception CreateAndLogServiceException(Xeption exception)
+        {
+            var commandServiceException =
+                new CommandServiceException(exception);
+
+            this.loggingBroker.LogError(commandServiceException);
+
+            return commandServiceException;
         }
     }
 }
