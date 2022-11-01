@@ -23,7 +23,6 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Commands
             // given
             string randomString = GetRandomString();
             string inputCommandString = randomString;
-
             var nullCommandException = new NullCommandException();
 
             var expectedCommandValidationException =
