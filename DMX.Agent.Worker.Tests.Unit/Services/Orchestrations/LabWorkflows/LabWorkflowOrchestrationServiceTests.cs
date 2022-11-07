@@ -44,6 +44,9 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Orchestrations.LabWorkflows
         private static string GetRandomString() =>
             new MnemonicString().GetValue();
 
+        private static DateTimeOffset GetRandomDateTime() =>
+            new DateTimeRange(earliestDate: DateTime.UnixEpoch).GetValue();
+
         private static Filler<LabWorkflow> CreateLabWorkflowFiller()
         {
             var filler = new Filler<LabWorkflow>();

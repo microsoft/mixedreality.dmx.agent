@@ -19,40 +19,40 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Orchestrations.LabWorkflows
             // given
             LabWorkflow randomLabWorkflow = CreateRandomLabWorkflow();
             LabWorkflow inputLabWorkflow = randomLabWorkflow;
-            MockSequence mockSequence = new MockSequence();
+            DateTimeOffset currentStartTime = GetRandomDateTime();
+            DateTimeOffset currentCompleteTime = currentStartTime;
+            var mockSequence = new MockSequence();
 
             foreach (LabWorkflowCommand labWorkflowCommand in inputLabWorkflow.Commands)
             {
-                DateTimeOffset currentStartTime = DateTime.UtcNow;
-                dateTimeBroker.InSequence(mockSequence).Setup(broker =>
-                    broker.GetCurrentDateTimeOffset())
-                        .Returns(currentStartTime);
-
                 LabWorkflowCommand startedLabWorkflowCommand = labWorkflowCommand;
                 startedLabWorkflowCommand.Status = CommandStatus.Running;
                 startedLabWorkflowCommand.UpdatedDate = currentStartTime;
-
-                this.labWorkflowCommandServiceMock.InSequence(mockSequence).Setup(service =>
-                    service.ModifyLabWorkflowCommandAsync(startedLabWorkflowCommand))
-                        .ReturnsAsync(It.IsAny<LabWorkflowCommand>());
 
                 string labWorkflowCommandString = labWorkflowCommand.Arguments;
                 string randomString = GetRandomString();
                 string commandResultString = randomString;
 
-                this.commandServiceMock.InSequence(mockSequence).Setup(service =>
-                    service.ExecuteCommandAsync(labWorkflowCommandString))
-                        .ReturnsAsync(randomString);
-
-                DateTimeOffset currentCompleteTime = DateTime.UtcNow;
-                dateTimeBroker.InSequence(mockSequence).Setup(broker =>
-                    broker.GetCurrentDateTimeOffset())
-                        .Returns(currentCompleteTime);
-
                 LabWorkflowCommand completedLabWorkflowCommand = labWorkflowCommand;
                 completedLabWorkflowCommand.Status = CommandStatus.Completed;
                 completedLabWorkflowCommand.UpdatedDate = currentCompleteTime;
                 completedLabWorkflowCommand.Results = commandResultString;
+
+                this.dateTimeBroker.InSequence(mockSequence).Setup(broker =>
+                    broker.GetCurrentDateTimeOffset())
+                        .Returns(currentStartTime);
+
+                this.labWorkflowCommandServiceMock.InSequence(mockSequence).Setup(service =>
+                    service.ModifyLabWorkflowCommandAsync(startedLabWorkflowCommand))
+                        .ReturnsAsync(It.IsAny<LabWorkflowCommand>());
+
+                this.commandServiceMock.InSequence(mockSequence).Setup(service =>
+                    service.ExecuteCommandAsync(labWorkflowCommandString))
+                        .ReturnsAsync(randomString);
+
+                this.dateTimeBroker.InSequence(mockSequence).Setup(broker =>
+                    broker.GetCurrentDateTimeOffset())
+                        .Returns(currentCompleteTime);
 
                 this.labWorkflowCommandServiceMock.InSequence(mockSequence).Setup(service =>
                     service.ModifyLabWorkflowCommandAsync(completedLabWorkflowCommand))
