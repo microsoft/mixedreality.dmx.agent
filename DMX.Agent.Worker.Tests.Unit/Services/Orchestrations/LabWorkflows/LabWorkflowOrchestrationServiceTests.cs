@@ -4,7 +4,11 @@
 
 using DMX.Agent.Worker.Brokers.DateTimes;
 using DMX.Agent.Worker.Brokers.Loggings;
+using DMX.Agent.Worker.Models.Foundations.Commands.Exceptions;
+using DMX.Agent.Worker.Models.Foundations.LabCommands.Exceptions;
+using DMX.Agent.Worker.Models.Foundations.LabWorkflowCommands.Exceptions;
 using DMX.Agent.Worker.Models.Foundations.LabWorkflows;
+using DMX.Agent.Worker.Models.LabWorkflows.Exceptions;
 using DMX.Agent.Worker.Models.Orchestrations.LabWorkflows;
 using DMX.Agent.Worker.Services.Foundations.Commands;
 using DMX.Agent.Worker.Services.Foundations.LabWorkflowCommands;
@@ -16,6 +20,7 @@ using System;
 using System.Linq.Expressions;
 using Tynamix.ObjectFiller;
 using Xeptions;
+using Xunit;
 
 namespace DMX.Agent.Worker.Tests.Unit.Services.Orchestrations.LabWorkflows
 {
@@ -42,6 +47,20 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Orchestrations.LabWorkflows
                 this.commandServiceMock.Object,
                 this.dateTimeBroker.Object,
                 this.loggingBroker.Object);
+        }
+
+        public static TheoryData<Xeption> LabWorkflowDependencyValidationExceptions()
+        {
+            string randomErrorMessage = GetRandomString();
+            var innerException = new Xeption(randomErrorMessage);
+
+            return new TheoryData<Xeption>
+            {
+                new LabWorkflowCommandDependencyValidationException(innerException),
+                new LabWorkflowCommandValidationException(innerException),
+                new CommandDependencyValidationException(innerException),
+                new CommandValidationException(innerException),
+            };
         }
 
         private Expression<Func<Exception, bool>> SameExceptionAs(Xeption expectedException) =>
