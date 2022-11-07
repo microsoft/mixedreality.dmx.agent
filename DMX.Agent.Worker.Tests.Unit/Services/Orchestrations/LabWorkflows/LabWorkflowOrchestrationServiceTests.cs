@@ -5,14 +5,17 @@
 using DMX.Agent.Worker.Brokers.DateTimes;
 using DMX.Agent.Worker.Brokers.Loggings;
 using DMX.Agent.Worker.Models.Foundations.LabWorkflows;
+using DMX.Agent.Worker.Models.Orchestrations.LabWorkflows;
 using DMX.Agent.Worker.Services.Foundations.Commands;
-using DMX.Agent.Worker.Services.Foundations.LabCommandEvents;
 using DMX.Agent.Worker.Services.Foundations.LabWorkflowCommands;
 using DMX.Agent.Worker.Services.Foundations.LabWorkflowEvents;
 using DMX.Agent.Worker.Services.Orchestrations;
+using DMX.Agent.Worker.Services.Orchestrations.LabWorkflows;
 using Moq;
 using System;
+using System.Linq.Expressions;
 using Tynamix.ObjectFiller;
+using Xeptions;
 
 namespace DMX.Agent.Worker.Tests.Unit.Services.Orchestrations.LabWorkflows
 {
@@ -31,7 +34,7 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Orchestrations.LabWorkflows
         	this.labWorkflowCommandServiceMock = new Mock<ILabWorkflowCommandService>(MockBehavior.Strict);
         	this.commandServiceMock = new Mock<ICommandService>(MockBehavior.Strict);
             this.dateTimeBroker = new Mock<IDateTimeBroker>(MockBehavior.Strict);
-            this.loggingBroker = new Mock<ILoggingBroker>(MockBehavior.Strict);
+            this.loggingBroker = new Mock<ILoggingBroker>();
 
             this.labWorkflowOrchestrationService = new LabWorkflowOrchestrationService(
                 this.labWorkflowEventServiceMock.Object,
@@ -40,6 +43,9 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Orchestrations.LabWorkflows
                 this.dateTimeBroker.Object,
                 this.loggingBroker.Object);
         }
+
+        private Expression<Func<Exception, bool>> SameExceptionAs(Xeption expectedException) =>
+            actualException => actualException.SameExceptionAs(expectedException);
 
         private static string GetRandomString() =>
             new MnemonicString().GetValue();

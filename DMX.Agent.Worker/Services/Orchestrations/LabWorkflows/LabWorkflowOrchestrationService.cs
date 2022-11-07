@@ -14,9 +14,9 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DMX.Agent.Worker.Services.Orchestrations
+namespace DMX.Agent.Worker.Services.Orchestrations.LabWorkflows
 {
-    public class LabWorkflowOrchestrationService : ILabWorkflowOrchestrationService
+    public partial class LabWorkflowOrchestrationService : ILabWorkflowOrchestrationService
     {
         private ILabWorkflowEventService labWorkflowEventService;
         private ILabWorkflowCommandService labWorkflowCommandService;
@@ -38,14 +38,17 @@ namespace DMX.Agent.Worker.Services.Orchestrations
             this.loggingBroker = loggingBroker;
         }
 
-        public async ValueTask ProcessLabWorkflow(LabWorkflow workflow)
+        public ValueTask ProcessLabWorkflow(LabWorkflow labWorkflow) =>
+        TryCatch(async () =>
         {
-            foreach (LabWorkflowCommand command in workflow.Commands)
+            ValidateIfLabWorkflowIsNotNull(labWorkflow);
+
+            foreach (LabWorkflowCommand command in labWorkflow.Commands)
             {
                 command.UpdatedDate = this.dateTimeBroker.GetCurrentDateTimeOffset();
                 command.Status = CommandStatus.Running;
                 await this.labWorkflowCommandService.ModifyLabWorkflowCommandAsync(command);
-                
+
                 var result = await this.commandService.ExecuteCommandAsync(command.Arguments);
                 command.Results = result;
 
@@ -53,6 +56,6 @@ namespace DMX.Agent.Worker.Services.Orchestrations
                 command.Status = CommandStatus.Completed;
                 await this.labWorkflowCommandService.ModifyLabWorkflowCommandAsync(command);
             }
-        }
+        });
     }
 }

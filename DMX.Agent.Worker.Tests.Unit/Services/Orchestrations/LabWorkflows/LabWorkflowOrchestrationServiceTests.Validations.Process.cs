@@ -2,10 +2,13 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ---------------------------------------------------------------
 
+using System;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using DMX.Agent.Worker.Models.Foundations.LabWorkflows;
 using DMX.Agent.Worker.Models.Orchestrations.LabWorkflows;
 using FluentAssertions;
+using Moq;
 using Xunit;
 
 namespace DMX.Agent.Worker.Tests.Unit.Services.Orchestrations.LabWorkflows
@@ -38,6 +41,11 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Orchestrations.LabWorkflows
             // then
             actualLabWorkflowOrchestrationValidationException.Should().BeEquivalentTo(
                 expectedLabWorkflowOrchestrationValidationException);
+
+            this.loggingBroker.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedLabWorkflowOrchestrationValidationException))),
+                        Times.Once);
 
             this.commandServiceMock.VerifyNoOtherCalls();
             this.labWorkflowCommandServiceMock.VerifyNoOtherCalls();

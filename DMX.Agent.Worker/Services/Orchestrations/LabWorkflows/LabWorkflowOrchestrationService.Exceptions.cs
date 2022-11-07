@@ -11,7 +11,7 @@ namespace DMX.Agent.Worker.Services.Orchestrations.LabWorkflows
 {
     public partial class LabWorkflowOrchestrationService
     {
-/*        private delegate ValueTask ReturningNothingFunction();
+        private delegate ValueTask ReturningNothingFunction();
 
         private async ValueTask TryCatch(ReturningNothingFunction returningNothingFunction)
         {
@@ -34,7 +34,9 @@ namespace DMX.Agent.Worker.Services.Orchestrations.LabWorkflows
             var labWorkflowOrchestrationValidationException =
                 new LabWorkflowOrchestrationValidationException(exception);
 
-            this.)
-        }*/
+            this.loggingBroker.LogError(labWorkflowOrchestrationValidationException);
+
+            return labWorkflowOrchestrationValidationException;
+        }
     }
 }
