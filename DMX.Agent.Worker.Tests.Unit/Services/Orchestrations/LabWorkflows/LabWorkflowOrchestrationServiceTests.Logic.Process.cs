@@ -52,6 +52,7 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Orchestrations.LabWorkflows
                 LabWorkflowCommand completedLabWorkflowCommand = labWorkflowCommand;
                 completedLabWorkflowCommand.Status = CommandStatus.Completed;
                 completedLabWorkflowCommand.UpdatedDate = currentCompleteTime;
+                completedLabWorkflowCommand.Results = commandResultString;
 
                 this.labWorkflowCommandServiceMock.InSequence(mockSequence).Setup(service =>
                     service.ModifyLabWorkflowCommandAsync(completedLabWorkflowCommand))

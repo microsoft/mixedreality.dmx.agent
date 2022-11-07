@@ -11,6 +11,7 @@ using DMX.Agent.Worker.Services.Foundations.LabCommandEvents;
 using DMX.Agent.Worker.Services.Foundations.LabWorkflowCommands;
 using DMX.Agent.Worker.Services.Foundations.LabWorkflowEvents;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DMX.Agent.Worker.Services.Orchestrations
@@ -37,7 +38,21 @@ namespace DMX.Agent.Worker.Services.Orchestrations
             this.loggingBroker = loggingBroker;
         }
 
-        public ValueTask ProcessLabWorkflow(LabWorkflow workflow) =>
-            throw new NotImplementedException();
+        public async ValueTask ProcessLabWorkflow(LabWorkflow workflow)
+        {
+            foreach (LabWorkflowCommand command in workflow.Commands)
+            {
+                command.UpdatedDate = this.dateTimeBroker.GetCurrentDateTimeOffset();
+                command.Status = CommandStatus.Running;
+                await this.labWorkflowCommandService.ModifyLabWorkflowCommandAsync(command);
+                
+                var result = await this.commandService.ExecuteCommandAsync(command.Arguments);
+                command.Results = result;
+
+                command.UpdatedDate = this.dateTimeBroker.GetCurrentDateTimeOffset();
+                command.Status = CommandStatus.Completed;
+                await this.labWorkflowCommandService.ModifyLabWorkflowCommandAsync(command);
+            }
+        }
     }
 }
