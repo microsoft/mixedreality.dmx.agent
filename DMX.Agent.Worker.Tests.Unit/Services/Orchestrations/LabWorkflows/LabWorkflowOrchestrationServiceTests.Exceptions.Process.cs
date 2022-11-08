@@ -2,15 +2,11 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ---------------------------------------------------------------
 
+using System.Threading.Tasks;
 using DMX.Agent.Worker.Models.Foundations.LabWorkflows;
 using DMX.Agent.Worker.Models.Orchestrations.LabWorkflows.Exceptions;
 using FluentAssertions;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xeptions;
 using Xunit;
 
@@ -30,7 +26,7 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Orchestrations.LabWorkflows
             var failedLabWorkflowOrchestrationDependencyValidationException =
                 new FailedLabWorkflowOrchestrationDependencyValidationException(dependencyValidationException);
 
-            var expectedLabWorkflowOrchestrationDependencyValidationException = 
+            var expectedLabWorkflowOrchestrationDependencyValidationException =
                 new LabWorkflowOrchestrationDependencyValidationException(
                     failedLabWorkflowOrchestrationDependencyValidationException);
 
@@ -65,7 +61,6 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Orchestrations.LabWorkflows
             this.labWorkflowEventServiceMock.VerifyNoOtherCalls();
             this.loggingBroker.VerifyNoOtherCalls();
             this.dateTimeBroker.VerifyNoOtherCalls();
-
         }
     }
 }
