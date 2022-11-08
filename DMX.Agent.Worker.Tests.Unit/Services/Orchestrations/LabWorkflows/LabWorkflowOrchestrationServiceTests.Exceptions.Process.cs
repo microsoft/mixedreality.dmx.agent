@@ -62,5 +62,54 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Orchestrations.LabWorkflows
             this.loggingBroker.VerifyNoOtherCalls();
             this.dateTimeBroker.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [MemberData(nameof(LabWorkflowDependencyExceptions))]
+        public async Task ShouldThrowOrchestrationDependencyExceptionOnProcessIfDependencyErrorOccursAndLogItAsync(
+            Xeption dependencyException)
+        {
+            // given
+            LabWorkflow randomLabWorkflow = CreateRandomLabWorkflow();
+            LabWorkflow inputLabWorkflow = randomLabWorkflow;
+
+            var failedLabWorkflowOrchestrationDependencyException =
+                new FailedLabWorkflowOrchestrationDependencyException(dependencyException);
+
+            var expectedLabWorkflowOrchestrationDependencyException =
+                new LabWorkflowOrchestrationDependencyException(
+                    failedLabWorkflowOrchestrationDependencyException);
+
+            this.dateTimeBroker.Setup(broker =>
+                broker.GetCurrentDateTimeOffset())
+                    .Throws(dependencyException);
+
+            // when
+            ValueTask processLabWorkflowTask =
+                this.labWorkflowOrchestrationService.ProcessLabWorkflow(inputLabWorkflow);
+
+            LabWorkflowOrchestrationDependencyException
+                actualLabWorkflowOrchestrationDependencyException =
+                    await Assert.ThrowsAsync<LabWorkflowOrchestrationDependencyException>(
+                        processLabWorkflowTask.AsTask);
+
+            // then
+            actualLabWorkflowOrchestrationDependencyException.Should().BeEquivalentTo(
+                expectedLabWorkflowOrchestrationDependencyException);
+
+            this.dateTimeBroker.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
+                    Times.Once);
+
+            this.loggingBroker.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedLabWorkflowOrchestrationDependencyException))),
+                        Times.Once);
+
+            this.commandServiceMock.VerifyNoOtherCalls();
+            this.labWorkflowCommandServiceMock.VerifyNoOtherCalls();
+            this.labWorkflowEventServiceMock.VerifyNoOtherCalls();
+            this.loggingBroker.VerifyNoOtherCalls();
+            this.dateTimeBroker.VerifyNoOtherCalls();
+        }
     }
 }

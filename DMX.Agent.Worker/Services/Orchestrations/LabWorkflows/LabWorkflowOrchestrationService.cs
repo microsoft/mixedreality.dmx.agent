@@ -2,17 +2,14 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ---------------------------------------------------------------
 
+using System.Threading.Tasks;
 using DMX.Agent.Worker.Brokers.DateTimes;
 using DMX.Agent.Worker.Brokers.Loggings;
 using DMX.Agent.Worker.Models.Foundations.LabWorkflowCommands;
 using DMX.Agent.Worker.Models.Foundations.LabWorkflows;
 using DMX.Agent.Worker.Services.Foundations.Commands;
-using DMX.Agent.Worker.Services.Foundations.LabCommandEvents;
 using DMX.Agent.Worker.Services.Foundations.LabWorkflowCommands;
 using DMX.Agent.Worker.Services.Foundations.LabWorkflowEvents;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DMX.Agent.Worker.Services.Orchestrations.LabWorkflows
 {
@@ -25,15 +22,15 @@ namespace DMX.Agent.Worker.Services.Orchestrations.LabWorkflows
         private ILoggingBroker loggingBroker;
 
         public LabWorkflowOrchestrationService(
-            ILabWorkflowEventService labWorkflowEventService, 
+            ILabWorkflowEventService labWorkflowEventService,
             ILabWorkflowCommandService labWorkflowCommandService,
             ICommandService commandService,
             IDateTimeBroker dateTimeBroker,
             ILoggingBroker loggingBroker)
         {
             this.labWorkflowEventService = labWorkflowEventService;
-			this.labWorkflowCommandService = labWorkflowCommandService;
-			this.commandService = commandService;
+            this.labWorkflowCommandService = labWorkflowCommandService;
+            this.commandService = commandService;
             this.dateTimeBroker = dateTimeBroker;
             this.loggingBroker = loggingBroker;
         }
