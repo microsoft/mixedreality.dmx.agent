@@ -2,6 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ---------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
 using DMX.Agent.Worker.Models.Foundations.LabWorkflows;
 using DMX.Agent.Worker.Models.Orchestrations.LabWorkflows.Exceptions;
@@ -103,6 +104,54 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Orchestrations.LabWorkflows
             this.loggingBroker.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedLabWorkflowOrchestrationDependencyException))),
+                        Times.Once);
+
+            this.commandServiceMock.VerifyNoOtherCalls();
+            this.labWorkflowCommandServiceMock.VerifyNoOtherCalls();
+            this.labWorkflowEventServiceMock.VerifyNoOtherCalls();
+            this.loggingBroker.VerifyNoOtherCalls();
+            this.dateTimeBroker.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnProcessIfServiceErrorOccursAndLogItAsync()
+        {
+            // given
+            LabWorkflow randomLabWorkflow = CreateRandomLabWorkflow();
+            LabWorkflow inputLabWorkflow = randomLabWorkflow;
+            var exception = new Exception();
+
+            var failedLabWorkflowOrchestrationServiceException =
+                new FailedLabWorkflowOrchestrationServiceException(exception);
+
+            var expectedLabWorkflowOrchestrationServiceException =
+                new LabWorkflowOrchestrationServiceException(
+                    failedLabWorkflowOrchestrationServiceException);
+
+            this.dateTimeBroker.Setup(broker =>
+                broker.GetCurrentDateTimeOffset())
+                    .Throws(exception);
+
+            // when
+            ValueTask processLabWorkflowTask =
+                this.labWorkflowOrchestrationService.ProcessLabWorkflow(inputLabWorkflow);
+
+            LabWorkflowOrchestrationServiceException
+                actualLabWorkflowOrchestrationServiceException =
+                    await Assert.ThrowsAsync<LabWorkflowOrchestrationServiceException>(
+                        processLabWorkflowTask.AsTask);
+
+            // then
+            actualLabWorkflowOrchestrationServiceException.Should().BeEquivalentTo(
+                expectedLabWorkflowOrchestrationServiceException);
+
+            this.dateTimeBroker.Verify(broker =>
+                broker.GetCurrentDateTimeOffset(),
+                    Times.Once);
+
+            this.loggingBroker.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedLabWorkflowOrchestrationServiceException))),
                         Times.Once);
 
             this.commandServiceMock.VerifyNoOtherCalls();
