@@ -104,6 +104,15 @@ namespace DMX.Agent.Worker.Services.Orchestrations.LabWorkflows
                 throw CreateAndLogOrchestrationDependencyException(
                     failedLabWorkflowOrchestrationDependencyException);
             }
+            catch (Exception exception)
+            {
+                var failedLabWorkflowOrchestrationServiceException =
+                    new FailedLabWorkflowOrchestrationServiceException(
+                        exception);
+
+                throw CreateAndLogOrchestrationServiceException(
+                    failedLabWorkflowOrchestrationServiceException);
+            }
         }
 
         private LabWorkflowOrchestrationValidationException CreateAndLogOrchestrationValidationException(Xeption exception)
@@ -134,6 +143,16 @@ namespace DMX.Agent.Worker.Services.Orchestrations.LabWorkflows
             this.loggingBroker.LogError(labWorkflowOrchestrationDependencyException);
 
             return labWorkflowOrchestrationDependencyException;
+        }
+
+        private LabWorkflowOrchestrationServiceException CreateAndLogOrchestrationServiceException(Xeption exception)
+        {
+            var labWorkflowOrchestrationServiceException =
+                new LabWorkflowOrchestrationServiceException(exception);
+
+            this.loggingBroker.LogError(labWorkflowOrchestrationServiceException);
+
+            return labWorkflowOrchestrationServiceException;
         }
     }
 }
