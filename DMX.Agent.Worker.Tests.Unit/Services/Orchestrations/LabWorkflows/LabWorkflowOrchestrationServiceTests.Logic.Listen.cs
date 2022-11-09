@@ -18,9 +18,14 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Orchestrations.LabWorkflows
             // then
             this.labWorkflowEventServiceMock.Verify(service =>
             service.ListenToLabWorkflowEvent(
-                this.labWorkflowOrchestrationService.ProcessLabWorkflow)
+                this.labWorkflowOrchestrationService.ProcessLabWorkflow),
+                    Times.Once());
 
-
+            this.labWorkflowEventServiceMock.VerifyNoOtherCalls();
+            this.labWorkflowCommandServiceMock.VerifyNoOtherCalls();
+            this.commandServiceMock.VerifyNoOtherCalls();
+            this.loggingBroker.VerifyNoOtherCalls();
+            this.dateTimeBroker.VerifyNoOtherCalls();
         }
     }
 }
