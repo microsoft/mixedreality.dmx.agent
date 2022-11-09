@@ -17,7 +17,7 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Orchestrations.LabWorkflows
     {
         [Theory]
         [MemberData(nameof(LabWorkflowOrchestrationDependencyValidationExceptions))]
-        public async Task 
+        public void 
             ShouldThrowOrchestrationDependencyValidationExceptionOnListenIfDependencyValidationErrorOccursAndLogItAsync(
                 Xeption dependencyValidationException)
         {
