@@ -2,6 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ---------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
 using DMX.Agent.Worker.Brokers.DateTimes;
 using DMX.Agent.Worker.Brokers.Loggings;
@@ -33,6 +34,11 @@ namespace DMX.Agent.Worker.Services.Orchestrations.LabWorkflows
             this.commandService = commandService;
             this.dateTimeBroker = dateTimeBroker;
             this.loggingBroker = loggingBroker;
+        }
+
+        public void ListenToLabWorkflowEvents()
+        {
+            throw new NotImplementedException();
         }
 
         public ValueTask ProcessLabWorkflow(LabWorkflow labWorkflow) =>
