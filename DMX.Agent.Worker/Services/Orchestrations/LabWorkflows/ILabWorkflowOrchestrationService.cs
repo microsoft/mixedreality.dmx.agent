@@ -9,6 +9,6 @@ namespace DMX.Agent.Worker.Services.Orchestrations
 {
     public interface ILabWorkflowOrchestrationService
     {
-        public ValueTask ProcessLabWorkflow(LabWorkflow labWorkflow);
+        ValueTask ProcessLabWorkflow(LabWorkflow labWorkflow);
     }
 }
