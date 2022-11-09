@@ -5,8 +5,8 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using DMX.Agent.Worker.Models.LabWorkflows;
-using DMX.Agent.Worker.Models.LabWorkflows.Exceptions;
+using DMX.Agent.Worker.Models.Foundations.LabWorkflows;
+using DMX.Agent.Worker.Models.Foundations.LabWorkflows.Exceptions;
 using FluentAssertions;
 using Microsoft.Azure.ServiceBus;
 using Moq;

@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 using System.Text;
 using DMX.Agent.Worker.Brokers.Loggings;
 using DMX.Agent.Worker.Brokers.Queues;
-using DMX.Agent.Worker.Models.LabWorkflows;
+using DMX.Agent.Worker.Models.Foundations.LabWorkflows;
 using DMX.Agent.Worker.Services.Foundations.LabWorkflowEvents;
 using KellermanSoftware.CompareNetObjects;
 using Microsoft.Azure.ServiceBus;
