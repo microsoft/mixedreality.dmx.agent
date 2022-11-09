@@ -35,7 +35,7 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Orchestrations.LabWorkflows
 
         public LabWorkflowOrchestrationServiceTests()
         {
-            this.labWorkflowEventServiceMock = new Mock<ILabWorkflowEventService>(MockBehavior.Strict);
+            this.labWorkflowEventServiceMock = new Mock<ILabWorkflowEventService>();
             this.labWorkflowCommandServiceMock = new Mock<ILabWorkflowCommandService>(MockBehavior.Strict);
             this.commandServiceMock = new Mock<ICommandService>(MockBehavior.Strict);
             this.dateTimeBroker = new Mock<IDateTimeBroker>(MockBehavior.Strict);

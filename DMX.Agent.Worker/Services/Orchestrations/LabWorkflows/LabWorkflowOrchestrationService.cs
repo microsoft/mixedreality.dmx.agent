@@ -36,10 +36,9 @@ namespace DMX.Agent.Worker.Services.Orchestrations.LabWorkflows
             this.loggingBroker = loggingBroker;
         }
 
-        public void ListenToLabWorkflowEvents()
-        {
-            throw new NotImplementedException();
-        }
+        public void ListenToLabWorkflowEvents() =>
+            this.labWorkflowEventService.ListenToLabWorkflowEvent(
+                ProcessLabWorkflow);
 
         public ValueTask ProcessLabWorkflow(LabWorkflow labWorkflow) =>
         TryCatch(async () =>
