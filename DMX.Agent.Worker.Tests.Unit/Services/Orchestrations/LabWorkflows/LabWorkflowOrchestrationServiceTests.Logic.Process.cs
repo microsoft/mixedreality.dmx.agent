@@ -2,11 +2,13 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ---------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using DMX.Agent.Worker.Models.Foundations.LabWorkflowCommands;
 using DMX.Agent.Worker.Models.Foundations.LabWorkflows;
+using Force.DeepCloner;
 using Moq;
-using System;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace DMX.Agent.Worker.Tests.Unit.Services.Orchestrations.LabWorkflows
@@ -19,21 +21,31 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Orchestrations.LabWorkflows
             // given
             LabWorkflow randomLabWorkflow = CreateRandomLabWorkflow();
             LabWorkflow inputLabWorkflow = randomLabWorkflow;
+            LabWorkflow expectedLabWorkflow = inputLabWorkflow.DeepClone();
             DateTimeOffset currentStartTime = GetRandomDateTime();
-            DateTimeOffset currentCompleteTime = currentStartTime;
+            DateTimeOffset currentCompleteTime = GetRandomDateTime();
+            string commandResultString = GetRandomString();
             var mockSequence = new MockSequence();
 
-            foreach (LabWorkflowCommand labWorkflowCommand in inputLabWorkflow.Commands)
+            List<LabWorkflowCommand> expectedCompletedLabWorkflowCommands =
+                expectedLabWorkflow.Commands.DeepClone();
+
+            expectedCompletedLabWorkflowCommands.ForEach(labWorkflowCommand =>
             {
-                LabWorkflowCommand startedLabWorkflowCommand = labWorkflowCommand;
-                startedLabWorkflowCommand.Status = CommandStatus.Running;
-                startedLabWorkflowCommand.UpdatedDate = currentStartTime;
+                labWorkflowCommand.Status = CommandStatus.Completed;
+                labWorkflowCommand.UpdatedDate = currentCompleteTime;
+                labWorkflowCommand.Results = commandResultString;
+            });
 
-                string labWorkflowCommandString = labWorkflowCommand.Arguments;
-                string randomString = GetRandomString();
-                string commandResultString = randomString;
+            inputLabWorkflow.Commands.ForEach(labWorkflowCommand =>
+            {
+                string labWorkflowCommandArguments = labWorkflowCommand.Arguments;
 
-                LabWorkflowCommand completedLabWorkflowCommand = labWorkflowCommand;
+                LabWorkflowCommand runningLabWorkflowCommand = labWorkflowCommand;
+                runningLabWorkflowCommand.Status = CommandStatus.Running;
+                runningLabWorkflowCommand.UpdatedDate = currentStartTime;
+
+                LabWorkflowCommand completedLabWorkflowCommand = labWorkflowCommand.DeepClone();
                 completedLabWorkflowCommand.Status = CommandStatus.Completed;
                 completedLabWorkflowCommand.UpdatedDate = currentCompleteTime;
                 completedLabWorkflowCommand.Results = commandResultString;
@@ -43,21 +55,23 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Orchestrations.LabWorkflows
                         .Returns(currentStartTime);
 
                 this.labWorkflowCommandServiceMock.InSequence(mockSequence).Setup(service =>
-                    service.ModifyLabWorkflowCommandAsync(startedLabWorkflowCommand))
-                        .ReturnsAsync(It.IsAny<LabWorkflowCommand>());
+                    service.ModifyLabWorkflowCommandAsync(It.Is(
+                        SameLabWorkflowCommandAs(runningLabWorkflowCommand))))
+                            .ReturnsAsync(It.IsAny<LabWorkflowCommand>());
 
                 this.commandServiceMock.InSequence(mockSequence).Setup(service =>
-                    service.ExecuteCommandAsync(labWorkflowCommandString))
-                        .ReturnsAsync(randomString);
+                    service.ExecuteCommandAsync(labWorkflowCommandArguments))
+                        .ReturnsAsync(commandResultString);
 
                 this.dateTimeBroker.InSequence(mockSequence).Setup(broker =>
                     broker.GetCurrentDateTimeOffset())
                         .Returns(currentCompleteTime);
 
                 this.labWorkflowCommandServiceMock.InSequence(mockSequence).Setup(service =>
-                    service.ModifyLabWorkflowCommandAsync(completedLabWorkflowCommand))
-                        .ReturnsAsync(It.IsAny<LabWorkflowCommand>());
-            }
+                    service.ModifyLabWorkflowCommandAsync(It.Is(
+                        SameLabWorkflowCommandAs(completedLabWorkflowCommand))))
+                            .ReturnsAsync(It.IsAny<LabWorkflowCommand>());
+            });
 
             // when
             await this.labWorkflowOrchestrationService.ProcessLabWorkflow(inputLabWorkflow);
@@ -65,15 +79,18 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Orchestrations.LabWorkflows
             // then
             this.dateTimeBroker.Verify(broker =>
                 broker.GetCurrentDateTimeOffset(),
-                    Times.Exactly(inputLabWorkflow.Commands.Count * 2));
+                    Times.Exactly(expectedCompletedLabWorkflowCommands.Count * 2));
 
-            this.labWorkflowCommandServiceMock.Verify(service =>
-                service.ModifyLabWorkflowCommandAsync(It.IsAny<LabWorkflowCommand>()),
-                    Times.Exactly(inputLabWorkflow.Commands.Count * 2));
+            expectedCompletedLabWorkflowCommands.ForEach(completedLabWorkflowCommand =>
+                this.labWorkflowCommandServiceMock.Verify(service =>
+                    service.ModifyLabWorkflowCommandAsync(It.Is(
+                        SameLabWorkflowCommandAs(completedLabWorkflowCommand))),
+                            Times.Exactly(2)));
 
-            this.commandServiceMock.Verify(service =>
-                service.ExecuteCommandAsync(It.IsAny<string>()),
-                    Times.Exactly(inputLabWorkflow.Commands.Count));
+            expectedCompletedLabWorkflowCommands.ForEach(labWorkflowCommand =>
+                this.commandServiceMock.Verify(service =>
+                    service.ExecuteCommandAsync(labWorkflowCommand.Arguments),
+                        Times.Once));
 
             this.dateTimeBroker.VerifyNoOtherCalls();
             this.labWorkflowCommandServiceMock.VerifyNoOtherCalls();
