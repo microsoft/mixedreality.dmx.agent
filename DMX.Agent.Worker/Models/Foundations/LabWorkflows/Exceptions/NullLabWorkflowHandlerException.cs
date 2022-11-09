@@ -4,7 +4,7 @@
 
 using Xeptions;
 
-namespace DMX.Agent.Worker.Models.LabWorkflows.Exceptions
+namespace DMX.Agent.Worker.Models.Foundations.LabWorkflows.Exceptions
 {
     public class NullLabWorkflowHandlerException : Xeption
     {

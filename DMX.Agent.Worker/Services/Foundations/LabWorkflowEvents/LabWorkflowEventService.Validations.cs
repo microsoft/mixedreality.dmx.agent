@@ -4,8 +4,8 @@
 
 using System;
 using System.Threading.Tasks;
-using DMX.Agent.Worker.Models.LabWorkflows;
-using DMX.Agent.Worker.Models.LabWorkflows.Exceptions;
+using DMX.Agent.Worker.Models.Foundations.LabWorkflows;
+using DMX.Agent.Worker.Models.Foundations.LabWorkflows.Exceptions;
 
 namespace DMX.Agent.Worker.Services.Foundations.LabWorkflowEvents
 {
