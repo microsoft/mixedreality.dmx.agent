@@ -10,6 +10,7 @@ using DMX.Agent.Worker.Models.Foundations.Commands.Exceptions;
 using DMX.Agent.Worker.Models.Foundations.LabWorkflowCommands;
 using DMX.Agent.Worker.Models.Foundations.LabWorkflowCommands.Exceptions;
 using DMX.Agent.Worker.Models.Foundations.LabWorkflows;
+using DMX.Agent.Worker.Models.Foundations.LabWorkflows.Exceptions;
 using DMX.Agent.Worker.Services.Foundations.Commands;
 using DMX.Agent.Worker.Services.Foundations.LabWorkflowCommands;
 using DMX.Agent.Worker.Services.Foundations.LabWorkflowEvents;
@@ -75,6 +76,17 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Orchestrations.LabWorkflows
                 new LabWorkflowCommandServiceException(innerException),
                 new CommandDependencyException(innerException),
                 new CommandServiceException(innerException)
+            };
+        }
+
+        public static TheoryData<Xeption> LabWorkflowOrchestrationDependencyValidationExceptions()
+        {
+            string randomErrorMessage = GetRandomString();
+            var innerException = new Xeption(randomErrorMessage);
+
+            return new TheoryData<Xeption>
+            {
+                new LabWorkflowValidationException(innerException),
             };
         }
 
