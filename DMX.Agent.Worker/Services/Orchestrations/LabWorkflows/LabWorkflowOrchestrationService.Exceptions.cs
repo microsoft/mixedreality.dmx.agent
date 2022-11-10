@@ -6,6 +6,7 @@ using System;
 using System.Threading.Tasks;
 using DMX.Agent.Worker.Models.Foundations.Commands.Exceptions;
 using DMX.Agent.Worker.Models.Foundations.LabWorkflowCommands.Exceptions;
+using DMX.Agent.Worker.Models.Foundations.LabWorkflows.Exceptions;
 using DMX.Agent.Worker.Models.Orchestrations.LabWorkflows;
 using DMX.Agent.Worker.Models.Orchestrations.LabWorkflows.Exceptions;
 using Xeptions;
@@ -14,13 +15,14 @@ namespace DMX.Agent.Worker.Services.Orchestrations.LabWorkflows
 {
     public partial class LabWorkflowOrchestrationService
     {
-        private delegate ValueTask ReturningNothingFunction();
+        private delegate ValueTask ReturningNothingFunctionAsync();
+        private delegate void ReturningNothingFunction();
 
-        private async ValueTask TryCatch(ReturningNothingFunction returningNothingFunction)
+        private async ValueTask TryCatch(ReturningNothingFunctionAsync returningNothingFunctionAsync)
         {
             try
             {
-                await returningNothingFunction();
+                await returningNothingFunctionAsync();
             }
             catch (NullLabWorkflowException nullLabWorkflowException)
             {
@@ -115,6 +117,18 @@ namespace DMX.Agent.Worker.Services.Orchestrations.LabWorkflows
             }
         }
 
+        private void TryCatch(ReturningNothingFunction returningNothingFunction)
+        {
+            try
+            {
+                returningNothingFunction();
+            }
+            catch(LabWorkflowValidationException labWorkflowValidationException)
+            {
+                throw CreateAndLogOrchestrationDependencyValidationException(labWorkflowValidationException);
+            }
+        }
+
         private LabWorkflowOrchestrationValidationException CreateAndLogOrchestrationValidationException(Xeption exception)
         {
             var labWorkflowOrchestrationValidationException =
@@ -128,7 +142,7 @@ namespace DMX.Agent.Worker.Services.Orchestrations.LabWorkflows
         private LabWorkflowOrchestrationDependencyValidationException CreateAndLogOrchestrationDependencyValidationException(Xeption exception)
         {
             var labWorkflowOrchestrationDependencyValidationException =
-                new LabWorkflowOrchestrationDependencyValidationException(exception);
+                new LabWorkflowOrchestrationDependencyValidationException(exception.InnerException as Xeption);
 
             this.loggingBroker.LogError(labWorkflowOrchestrationDependencyValidationException);
 

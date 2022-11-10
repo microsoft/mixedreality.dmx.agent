@@ -22,8 +22,9 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Orchestrations.LabWorkflows
                 Xeption dependencyValidationException)
         {
             // given
-            var expectedLabWorkflowOrchestrationDependencyValidationException = new LabWorkflowOrchestrationDependencyValidationException(
-                dependencyValidationException.InnerException as Xeption);
+            var expectedLabWorkflowOrchestrationDependencyValidationException =
+                new LabWorkflowOrchestrationDependencyValidationException(
+                    dependencyValidationException.InnerException as Xeption);
 
             this.labWorkflowEventServiceMock.Setup(service =>
                 service.ListenToLabWorkflowEvent(this.labWorkflowOrchestrationService.ProcessLabWorkflow))
