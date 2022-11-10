@@ -24,12 +24,9 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Orchestrations.LabWorkflows
             LabWorkflow randomLabWorkflow = CreateRandomLabWorkflow();
             LabWorkflow inputLabWorkflow = randomLabWorkflow;
 
-            var failedLabWorkflowOrchestrationDependencyValidationException =
-                new FailedLabWorkflowOrchestrationDependencyValidationException(dependencyValidationException);
-
             var expectedLabWorkflowOrchestrationDependencyValidationException =
                 new LabWorkflowOrchestrationDependencyValidationException(
-                    failedLabWorkflowOrchestrationDependencyValidationException);
+                    dependencyValidationException);
 
             this.dateTimeBroker.Setup(broker =>
                 broker.GetCurrentDateTimeOffset())
@@ -73,12 +70,9 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Orchestrations.LabWorkflows
             LabWorkflow randomLabWorkflow = CreateRandomLabWorkflow();
             LabWorkflow inputLabWorkflow = randomLabWorkflow;
 
-            var failedLabWorkflowOrchestrationDependencyException =
-                new FailedLabWorkflowOrchestrationDependencyException(dependencyException);
-
             var expectedLabWorkflowOrchestrationDependencyException =
                 new LabWorkflowOrchestrationDependencyException(
-                    failedLabWorkflowOrchestrationDependencyException);
+                    dependencyException);
 
             this.dateTimeBroker.Setup(broker =>
                 broker.GetCurrentDateTimeOffset())

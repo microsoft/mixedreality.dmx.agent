@@ -32,77 +32,44 @@ namespace DMX.Agent.Worker.Services.Orchestrations.LabWorkflows
             }
             catch (LabWorkflowCommandDependencyValidationException labWorkflowCommandDependencyValidationException)
             {
-                var failedLabWorkflowOrchestrationDependencyValidationException =
-                    new FailedLabWorkflowOrchestrationDependencyValidationException(
-                        labWorkflowCommandDependencyValidationException);
-
                 throw CreateAndLogOrchestrationDependencyValidationException(
-                    failedLabWorkflowOrchestrationDependencyValidationException);
+                    labWorkflowCommandDependencyValidationException);
             }
             catch (LabWorkflowCommandValidationException labWorkflowCommandValidationException)
             {
-                var failedLabWorkflowOrchestrationDependencyValidationException =
-                    new FailedLabWorkflowOrchestrationDependencyValidationException(
-                        labWorkflowCommandValidationException);
-
                 throw CreateAndLogOrchestrationDependencyValidationException(
-                    failedLabWorkflowOrchestrationDependencyValidationException);
+                    labWorkflowCommandValidationException);
             }
             catch (CommandDependencyValidationException commandDependencyValidationException)
             {
-                var failedLabWorkflowOrchestrationDependencyValidationException =
-                    new FailedLabWorkflowOrchestrationDependencyValidationException(
-                        commandDependencyValidationException);
-
                 throw CreateAndLogOrchestrationDependencyValidationException(
-                    failedLabWorkflowOrchestrationDependencyValidationException);
+                    commandDependencyValidationException);
             }
             catch (CommandValidationException commandValidationException)
             {
-                var failedLabWorkflowOrchestrationDependencyValidationException =
-                    new FailedLabWorkflowOrchestrationDependencyValidationException(
-                        commandValidationException);
-
                 throw CreateAndLogOrchestrationDependencyValidationException(
-                    failedLabWorkflowOrchestrationDependencyValidationException);
+                    commandValidationException);
             }
             catch (LabWorkflowCommandDependencyException labWorkflowCommandDependencyException)
             {
-                var failedLabWorkflowOrchestrationDependencyException =
-                    new FailedLabWorkflowOrchestrationDependencyException(
-                        labWorkflowCommandDependencyException);
-
                 throw CreateAndLogOrchestrationDependencyException(
-                    failedLabWorkflowOrchestrationDependencyException);
+                    labWorkflowCommandDependencyException);
             }
 
             catch (LabWorkflowCommandServiceException labWorkflowCommandServiceException)
             {
-                var failedLabWorkflowOrchestrationDependencyException =
-                    new FailedLabWorkflowOrchestrationDependencyException(
-                        labWorkflowCommandServiceException);
-
                 throw CreateAndLogOrchestrationDependencyException(
-                    failedLabWorkflowOrchestrationDependencyException);
+                    labWorkflowCommandServiceException);
             }
-
             catch (CommandDependencyException commandDependencyException)
             {
-                var failedLabWorkflowOrchestrationDependencyException =
-                    new FailedLabWorkflowOrchestrationDependencyException(
-                        commandDependencyException);
-
                 throw CreateAndLogOrchestrationDependencyException(
-                    failedLabWorkflowOrchestrationDependencyException);
+                    commandDependencyException);
             }
             catch (CommandServiceException commandServiceException)
             {
-                var failedLabWorkflowOrchestrationDependencyException =
-                    new FailedLabWorkflowOrchestrationDependencyException(
-                        commandServiceException);
-
                 throw CreateAndLogOrchestrationDependencyException(
-                    failedLabWorkflowOrchestrationDependencyException);
+                    commandServiceException);
             }
             catch (Exception exception)
             {
