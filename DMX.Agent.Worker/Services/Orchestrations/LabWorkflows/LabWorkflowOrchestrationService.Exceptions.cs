@@ -95,7 +95,7 @@ namespace DMX.Agent.Worker.Services.Orchestrations.LabWorkflows
         private LabWorkflowOrchestrationDependencyValidationException CreateAndLogOrchestrationDependencyValidationException(Xeption exception)
         {
             var labWorkflowOrchestrationDependencyValidationException =
-                new LabWorkflowOrchestrationDependencyValidationException(exception);
+                new LabWorkflowOrchestrationDependencyValidationException(exception.InnerException as Xeption);
 
             this.loggingBroker.LogError(labWorkflowOrchestrationDependencyValidationException);
 
@@ -105,7 +105,7 @@ namespace DMX.Agent.Worker.Services.Orchestrations.LabWorkflows
         private LabWorkflowOrchestrationDependencyException CreateAndLogOrchestrationDependencyException(Xeption exception)
         {
             var labWorkflowOrchestrationDependencyException =
-                new LabWorkflowOrchestrationDependencyException(exception);
+                new LabWorkflowOrchestrationDependencyException(exception.InnerException as Xeption);
 
             this.loggingBroker.LogError(labWorkflowOrchestrationDependencyException);
 

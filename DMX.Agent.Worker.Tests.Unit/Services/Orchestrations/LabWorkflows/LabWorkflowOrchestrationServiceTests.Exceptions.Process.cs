@@ -26,7 +26,7 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Orchestrations.LabWorkflows
 
             var expectedLabWorkflowOrchestrationDependencyValidationException =
                 new LabWorkflowOrchestrationDependencyValidationException(
-                    dependencyValidationException);
+                    dependencyValidationException.InnerException as Xeption);
 
             this.dateTimeBroker.Setup(broker =>
                 broker.GetCurrentDateTimeOffset())
@@ -72,7 +72,7 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Orchestrations.LabWorkflows
 
             var expectedLabWorkflowOrchestrationDependencyException =
                 new LabWorkflowOrchestrationDependencyException(
-                    dependencyException);
+                    dependencyException.InnerException as Xeption);
 
             this.dateTimeBroker.Setup(broker =>
                 broker.GetCurrentDateTimeOffset())
