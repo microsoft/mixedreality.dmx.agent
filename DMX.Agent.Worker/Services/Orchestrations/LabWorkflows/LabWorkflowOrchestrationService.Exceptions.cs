@@ -52,12 +52,16 @@ namespace DMX.Agent.Worker.Services.Orchestrations.LabWorkflows
                 throw CreateAndLogOrchestrationDependencyValidationException(
                     commandValidationException);
             }
+            catch (LabWorkflowValidationException labWorkflowValidationException)
+            {
+                throw CreateAndLogOrchestrationDependencyValidationException(
+                    labWorkflowValidationException);
+            }
             catch (LabWorkflowCommandDependencyException labWorkflowCommandDependencyException)
             {
                 throw CreateAndLogOrchestrationDependencyException(
                     labWorkflowCommandDependencyException);
             }
-
             catch (LabWorkflowCommandServiceException labWorkflowCommandServiceException)
             {
                 throw CreateAndLogOrchestrationDependencyException(
