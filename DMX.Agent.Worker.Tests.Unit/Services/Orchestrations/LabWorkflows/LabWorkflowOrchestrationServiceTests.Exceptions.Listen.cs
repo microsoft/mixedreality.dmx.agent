@@ -62,7 +62,7 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Orchestrations.LabWorkflows
 
         [Theory]
         [MemberData(nameof(LabWorkflowOrchestrationDependencyExceptions))]
-        public void ShouldThrowOrchestrationDependencyExceptionOnListenIfErrorOccursAndLogItAsync(Exception dependencyException)
+        public void ShouldThrowOrchestrationDependencyExceptionOnListenIfErrorOccursAndLogItAsync(Xeption dependencyException)
         {
             // given
             var expectedLabWorkflowOrchestrationDependencyException =

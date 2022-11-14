@@ -94,6 +94,36 @@ namespace DMX.Agent.Worker.Services.Orchestrations.LabWorkflows
             {
                 throw CreateAndLogOrchestrationDependencyValidationException(labWorkflowValidationException);
             }
+            catch (LabWorkflowCommandDependencyException labWorkflowCommandDependencyException)
+            {
+                throw CreateAndLogOrchestrationDependencyException(
+                    labWorkflowCommandDependencyException);
+            }
+            catch (LabWorkflowCommandServiceException labWorkflowCommandServiceException)
+            {
+                throw CreateAndLogOrchestrationDependencyException(
+                    labWorkflowCommandServiceException);
+            }
+            catch (LabWorkflowDependencyException labWorkflowDependencyException)
+            {
+                throw CreateAndLogOrchestrationDependencyException(
+                    labWorkflowDependencyException);
+            }
+            catch (LabWorkflowServiceException labWorkflowServiceException)
+            {
+                throw CreateAndLogOrchestrationDependencyException(
+                    labWorkflowServiceException);
+            }
+            catch (CommandDependencyException commandDependencyException)
+            {
+                throw CreateAndLogOrchestrationDependencyException(
+                    commandDependencyException);
+            }
+            catch (CommandServiceException commandServiceException)
+            {
+                throw CreateAndLogOrchestrationDependencyException(
+                    commandServiceException);
+            }
         }
 
         private LabWorkflowOrchestrationValidationException CreateAndLogOrchestrationValidationException(Xeption exception)

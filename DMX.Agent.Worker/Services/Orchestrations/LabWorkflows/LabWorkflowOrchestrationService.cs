@@ -37,11 +37,11 @@ namespace DMX.Agent.Worker.Services.Orchestrations.LabWorkflows
         }
 
         public void ListenToLabWorkflowEvents() =>
-            TryCatch(() =>
-            {
-                this.labWorkflowEventService.ListenToLabWorkflowEvent(
-                    ProcessLabWorkflow);
-            });
+        TryCatch(() =>
+        {
+            this.labWorkflowEventService.ListenToLabWorkflowEvent(
+                ProcessLabWorkflow);
+        });
 
         public ValueTask ProcessLabWorkflow(LabWorkflow labWorkflow) =>
         TryCatch(async () =>
