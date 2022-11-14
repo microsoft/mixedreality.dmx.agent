@@ -66,11 +66,13 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Orchestrations.LabWorkflows
         {
             // given
             var expectedLabWorkflowOrchestrationDependencyException =
-                new LabWorkflowOrchestrationDependencyException(dependencyException.InnerException as Xeption);
+                new LabWorkflowOrchestrationDependencyException(
+                    dependencyException.InnerException as Xeption);
 
             this.labWorkflowEventServiceMock.Setup(service =>
-                service.ListenToLabWorkflowEvent(this.labWorkflowOrchestrationService.ProcessLabWorkflow))
-                    .Throws(dependencyException);
+                service.ListenToLabWorkflowEvent(
+                    this.labWorkflowOrchestrationService.ProcessLabWorkflow))
+                        .Throws(dependencyException);
 
             // when
             Action listenLabWorkflowAction =
@@ -93,6 +95,54 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Orchestrations.LabWorkflows
             this.loggingBroker.Verify(broker =>
                 broker.LogError(It.Is(SameExceptionAs(
                     expectedLabWorkflowOrchestrationDependencyException))),
+                        Times.Once);
+
+            this.labWorkflowEventServiceMock.VerifyNoOtherCalls();
+            this.labWorkflowCommandServiceMock.VerifyNoOtherCalls();
+            this.commandServiceMock.VerifyNoOtherCalls();
+            this.loggingBroker.VerifyNoOtherCalls();
+            this.dateTimeBroker.VerifyNoOtherCalls();
+        }
+
+        [Fact]
+        public void ShouldThrowOrchestrationServiceExceptionOnListenIfServiceErrorOccursAndLogItAsync()
+        {
+            // given
+            var exception = new Exception();
+
+            var failedLabWorkflowOrchestrationServiceException =
+                new FailedLabWorkflowOrchestrationServiceException(exception);
+
+            var expectedLabWorkflowOrchestrationServiceException = 
+                new LabWorkflowOrchestrationServiceException(
+                    failedLabWorkflowOrchestrationServiceException);
+
+            this.labWorkflowEventServiceMock.Setup(service =>
+                service.ListenToLabWorkflowEvent(
+                    this.labWorkflowOrchestrationService.ProcessLabWorkflow))
+                        .Throws(exception);
+
+            // when
+            Action listenLabWorkflowAction =
+                () => this.labWorkflowOrchestrationService.ListenToLabWorkflowEvents();
+
+            LabWorkflowOrchestrationServiceException
+                actualLabWorkflowOrchestrationServiceException =
+                    Assert.Throws<LabWorkflowOrchestrationServiceException>(
+                        listenLabWorkflowAction);
+
+            // then
+            actualLabWorkflowOrchestrationServiceException.Should().BeEquivalentTo(
+                expectedLabWorkflowOrchestrationServiceException);
+
+            this.labWorkflowEventServiceMock.Verify(service =>
+                service.ListenToLabWorkflowEvent(
+                    this.labWorkflowOrchestrationService.ProcessLabWorkflow),
+                        Times.Once);
+
+            this.loggingBroker.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedLabWorkflowOrchestrationServiceException))),
                         Times.Once);
 
             this.labWorkflowEventServiceMock.VerifyNoOtherCalls();
