@@ -128,6 +128,13 @@ namespace DMX.Agent.Worker.Services.Orchestrations.LabWorkflows
                 throw CreateAndLogOrchestrationDependencyException(
                     commandServiceException);
             }
+            catch(Exception exception)
+            {
+                var failedLabWorkflowOrchestrationServiceException =
+                    new FailedLabWorkflowOrchestrationServiceException(exception);
+
+                throw CreateAndLogOrchestrationServiceException(failedLabWorkflowOrchestrationServiceException);
+            }
         }
 
         private LabWorkflowOrchestrationValidationException CreateAndLogOrchestrationValidationException(Xeption exception)
