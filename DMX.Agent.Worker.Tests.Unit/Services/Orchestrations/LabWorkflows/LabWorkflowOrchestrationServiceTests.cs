@@ -62,6 +62,23 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Orchestrations.LabWorkflows
                 new LabWorkflowCommandValidationException(innerException),
                 new CommandDependencyValidationException(innerException),
                 new CommandValidationException(innerException),
+                new LabWorkflowValidationException(innerException),
+            };
+        }
+
+        public static TheoryData<Xeption> LabWorkflowOrchestrationDependencyExceptions()
+        {
+            string randomErrorMessage = GetRandomString();
+            var innerException = new Xeption(randomErrorMessage);
+
+            return new TheoryData<Xeption>
+            {
+                new LabWorkflowCommandDependencyException(innerException),
+                new LabWorkflowCommandServiceException(innerException),
+                new LabWorkflowDependencyException(innerException),
+                new LabWorkflowServiceException(innerException),
+                new CommandDependencyException(innerException),
+                new CommandServiceException(innerException),
             };
         }
 

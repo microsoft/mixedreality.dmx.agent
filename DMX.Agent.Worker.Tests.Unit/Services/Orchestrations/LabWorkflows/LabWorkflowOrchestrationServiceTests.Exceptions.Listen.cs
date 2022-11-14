@@ -59,5 +59,47 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Orchestrations.LabWorkflows
             this.loggingBroker.VerifyNoOtherCalls();
             this.dateTimeBroker.VerifyNoOtherCalls();
         }
+
+        [Theory]
+        [MemberData(nameof(LabWorkflowOrchestrationDependencyExceptions))]
+        public void ShouldThrowOrchestrationDependencyExceptionOnListenIfErrorOccursAndLogItAsync(Exception dependencyException)
+        {
+            // given
+            var expectedLabWorkflowOrchestrationDependencyException =
+                new LabWorkflowOrchestrationDependencyException(dependencyException.InnerException as Xeption);
+
+            this.labWorkflowEventServiceMock.Setup(service =>
+                service.ListenToLabWorkflowEvent(this.labWorkflowOrchestrationService.ProcessLabWorkflow))
+                    .Throws(dependencyException);
+
+            // when
+            Action listenLabWorkflowAction =
+                () => this.labWorkflowOrchestrationService.ListenToLabWorkflowEvents();
+
+            LabWorkflowOrchestrationDependencyException
+                actualLabWorkflowOrchestrationDependencyException =
+                    Assert.Throws<LabWorkflowOrchestrationDependencyException>(
+                        listenLabWorkflowAction);
+
+            // then
+            actualLabWorkflowOrchestrationDependencyException.Should().BeEquivalentTo(
+                expectedLabWorkflowOrchestrationDependencyException);
+
+            this.labWorkflowEventServiceMock.Verify(service =>
+                service.ListenToLabWorkflowEvent(
+                    this.labWorkflowOrchestrationService.ProcessLabWorkflow),
+                        Times.Once);
+
+            this.loggingBroker.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedLabWorkflowOrchestrationDependencyException))),
+                        Times.Once);
+
+            this.labWorkflowEventServiceMock.VerifyNoOtherCalls();
+            this.labWorkflowCommandServiceMock.VerifyNoOtherCalls();
+            this.commandServiceMock.VerifyNoOtherCalls();
+            this.loggingBroker.VerifyNoOtherCalls();
+            this.dateTimeBroker.VerifyNoOtherCalls();
+        }
     }
 }
