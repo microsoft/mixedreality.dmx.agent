@@ -94,7 +94,7 @@ namespace DMX.Agent.Worker.Services.Orchestrations.LabWorkflows
             {
                 returningNothingFunction();
             }
-            catch(LabWorkflowValidationException labWorkflowValidationException)
+            catch (LabWorkflowValidationException labWorkflowValidationException)
             {
                 throw CreateAndLogOrchestrationDependencyValidationException(labWorkflowValidationException);
             }
@@ -128,7 +128,7 @@ namespace DMX.Agent.Worker.Services.Orchestrations.LabWorkflows
                 throw CreateAndLogOrchestrationDependencyException(
                     commandServiceException);
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 var failedLabWorkflowOrchestrationServiceException =
                     new FailedLabWorkflowOrchestrationServiceException(exception);

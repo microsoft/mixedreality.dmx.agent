@@ -2,9 +2,9 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ---------------------------------------------------------------
 
-using DMX.Agent.Worker.Models.Foundations.LabWorkflows;
 using System;
 using System.Threading.Tasks;
+using DMX.Agent.Worker.Models.Foundations.LabWorkflows;
 
 namespace DMX.Agent.Worker.Services.Foundations.LabWorkflowEvents
 {

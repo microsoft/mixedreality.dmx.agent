@@ -2,7 +2,6 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ---------------------------------------------------------------
 
-using System;
 using System.Threading.Tasks;
 using DMX.Agent.Worker.Brokers.DateTimes;
 using DMX.Agent.Worker.Brokers.Loggings;
@@ -55,7 +54,7 @@ namespace DMX.Agent.Worker.Services.Orchestrations.LabWorkflows
                 await this.labWorkflowCommandService.ModifyLabWorkflowCommandAsync(command);
 
                 var result = await this.commandService.ExecuteCommandAsync(command.Arguments);
-                
+
                 command.Results = result;
                 command.UpdatedDate = this.dateTimeBroker.GetCurrentDateTimeOffset();
                 command.Status = CommandStatus.Completed;

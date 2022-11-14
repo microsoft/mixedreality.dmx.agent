@@ -2,12 +2,10 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ---------------------------------------------------------------
 
-using DMX.Agent.Worker.Models.Foundations.LabWorkflows;
+using System;
 using DMX.Agent.Worker.Models.Orchestrations.LabWorkflows.Exceptions;
 using FluentAssertions;
 using Moq;
-using System;
-using System.Threading.Tasks;
 using Xeptions;
 using Xunit;
 
@@ -17,7 +15,7 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Orchestrations.LabWorkflows
     {
         [Theory]
         [MemberData(nameof(LabWorkflowOrchestrationDependencyValidationExceptions))]
-        public void 
+        public void
             ShouldThrowOrchestrationDependencyValidationExceptionOnListenIfDependencyValidationErrorOccursAndLogItAsync(
                 Xeption dependencyValidationException)
         {
@@ -42,7 +40,7 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Orchestrations.LabWorkflows
             // then
             actualLabWorkflowOrchestrationDependencyValidationException.Should().BeEquivalentTo(
                 expectedLabWorkflowOrchestrationDependencyValidationException);
-           
+
             this.labWorkflowEventServiceMock.Verify(service =>
                 service.ListenToLabWorkflowEvent(
                     this.labWorkflowOrchestrationService.ProcessLabWorkflow),
@@ -113,7 +111,7 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Orchestrations.LabWorkflows
             var failedLabWorkflowOrchestrationServiceException =
                 new FailedLabWorkflowOrchestrationServiceException(exception);
 
-            var expectedLabWorkflowOrchestrationServiceException = 
+            var expectedLabWorkflowOrchestrationServiceException =
                 new LabWorkflowOrchestrationServiceException(
                     failedLabWorkflowOrchestrationServiceException);
 

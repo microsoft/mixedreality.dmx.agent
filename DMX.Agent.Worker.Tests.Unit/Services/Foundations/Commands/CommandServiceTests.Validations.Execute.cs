@@ -2,10 +2,10 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ---------------------------------------------------------------
 
+using System.Threading.Tasks;
 using DMX.Agent.Worker.Models.Foundations.Commands.Exceptions;
 using FluentAssertions;
 using Moq;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Commands
