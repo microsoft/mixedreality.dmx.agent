@@ -10,7 +10,7 @@ namespace DMX.Agent.Worker.Models.Foundations.Commands.Exceptions
     public class FailedCommandServiceException : Xeption
     {
         public FailedCommandServiceException(Exception exception)
-            :base(message:"Failed command service error occurred. Please contact support",
+            : base(message: "Failed command service error occurred. Please contact support",
                  exception)
         { }
     }

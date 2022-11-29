@@ -35,6 +35,13 @@ namespace DMX.Agent.Worker.Services.Orchestrations.LabWorkflows
             this.loggingBroker = loggingBroker;
         }
 
+        public void ListenToLabWorkflowEvents() =>
+        TryCatch(() =>
+        {
+            this.labWorkflowEventService.ListenToLabWorkflowEvent(
+                ProcessLabWorkflow);
+        });
+
         public ValueTask ProcessLabWorkflow(LabWorkflow labWorkflow) =>
         TryCatch(async () =>
         {
@@ -47,7 +54,7 @@ namespace DMX.Agent.Worker.Services.Orchestrations.LabWorkflows
                 await this.labWorkflowCommandService.ModifyLabWorkflowCommandAsync(command);
 
                 var result = await this.commandService.ExecuteCommandAsync(command.Arguments);
-                
+
                 command.Results = result;
                 command.UpdatedDate = this.dateTimeBroker.GetCurrentDateTimeOffset();
                 command.Status = CommandStatus.Completed;

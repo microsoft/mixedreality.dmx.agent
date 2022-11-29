@@ -2,13 +2,13 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ---------------------------------------------------------------
 
+using System;
+using System.ComponentModel;
+using System.Linq.Expressions;
 using DMX.Agent.Worker.Brokers.Commands;
 using DMX.Agent.Worker.Brokers.Loggings;
 using DMX.Agent.Worker.Services.Foundations.Commands;
 using Moq;
-using System;
-using System.ComponentModel;
-using System.Linq.Expressions;
 using Tynamix.ObjectFiller;
 using Xeptions;
 using Xunit;

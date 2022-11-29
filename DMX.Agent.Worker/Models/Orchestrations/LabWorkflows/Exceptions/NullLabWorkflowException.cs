@@ -9,7 +9,7 @@ namespace DMX.Agent.Worker.Models.Orchestrations.LabWorkflows
     public class NullLabWorkflowException : Xeption
     {
         public NullLabWorkflowException()
-            : base(message:"Lab workflow is null.")
+            : base(message: "Lab workflow is null.")
         { }
     }
 }
