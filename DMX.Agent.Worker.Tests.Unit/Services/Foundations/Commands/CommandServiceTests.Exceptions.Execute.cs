@@ -4,10 +4,8 @@
 
 using System;
 using System.Threading.Tasks;
-using DMX.Agent.Worker.Models.Foundations.Commands;
 using DMX.Agent.Worker.Models.Foundations.Commands.Exceptions;
 using FluentAssertions;
-using Force.DeepCloner;
 using Moq;
 using Xunit;
 
@@ -71,7 +69,7 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Commands
             var failedCommandDependencyValidationException =
                 new FailedCommandDependencyValidationException(dependencyValidationException);
 
-            var expectedCommandDependencyValidationException = 
+            var expectedCommandDependencyValidationException =
                 new CommandDependencyValidationException(failedCommandDependencyValidationException);
 
             this.commandBrokerMock.Setup(broker =>

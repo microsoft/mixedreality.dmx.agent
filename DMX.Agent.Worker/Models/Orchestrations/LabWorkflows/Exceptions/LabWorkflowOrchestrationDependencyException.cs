@@ -8,7 +8,7 @@ namespace DMX.Agent.Worker.Models.Orchestrations.LabWorkflows.Exceptions
 {
     public class LabWorkflowOrchestrationDependencyException : Xeption
     {
-        public LabWorkflowOrchestrationDependencyException(Xeption innerException) 
+        public LabWorkflowOrchestrationDependencyException(Xeption innerException)
             : base(message: "Lab workflow orchestration dependency error occured. Please contact support.",
                   innerException)
         { }

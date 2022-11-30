@@ -6,6 +6,7 @@ using System;
 using System.Threading.Tasks;
 using DMX.Agent.Worker.Models.Foundations.Commands.Exceptions;
 using DMX.Agent.Worker.Models.Foundations.LabWorkflowCommands.Exceptions;
+using DMX.Agent.Worker.Models.Foundations.LabWorkflows.Exceptions;
 using DMX.Agent.Worker.Models.Orchestrations.LabWorkflows;
 using DMX.Agent.Worker.Models.Orchestrations.LabWorkflows.Exceptions;
 using Xeptions;
@@ -14,13 +15,14 @@ namespace DMX.Agent.Worker.Services.Orchestrations.LabWorkflows
 {
     public partial class LabWorkflowOrchestrationService
     {
-        private delegate ValueTask ReturningNothingFunction();
+        private delegate ValueTask ReturningNothingFunctionAsync();
+        private delegate void ReturningNothingFunction();
 
-        private async ValueTask TryCatch(ReturningNothingFunction returningNothingFunction)
+        private async ValueTask TryCatch(ReturningNothingFunctionAsync returningNothingFunctionAsync)
         {
             try
             {
-                await returningNothingFunction();
+                await returningNothingFunctionAsync();
             }
             catch (NullLabWorkflowException nullLabWorkflowException)
             {
@@ -50,12 +52,16 @@ namespace DMX.Agent.Worker.Services.Orchestrations.LabWorkflows
                 throw CreateAndLogOrchestrationDependencyValidationException(
                     commandValidationException);
             }
+            catch (LabWorkflowValidationException labWorkflowValidationException)
+            {
+                throw CreateAndLogOrchestrationDependencyValidationException(
+                    labWorkflowValidationException);
+            }
             catch (LabWorkflowCommandDependencyException labWorkflowCommandDependencyException)
             {
                 throw CreateAndLogOrchestrationDependencyException(
                     labWorkflowCommandDependencyException);
             }
-
             catch (LabWorkflowCommandServiceException labWorkflowCommandServiceException)
             {
                 throw CreateAndLogOrchestrationDependencyException(
@@ -79,6 +85,55 @@ namespace DMX.Agent.Worker.Services.Orchestrations.LabWorkflows
 
                 throw CreateAndLogOrchestrationServiceException(
                     failedLabWorkflowOrchestrationServiceException);
+            }
+        }
+
+        private void TryCatch(ReturningNothingFunction returningNothingFunction)
+        {
+            try
+            {
+                returningNothingFunction();
+            }
+            catch (LabWorkflowValidationException labWorkflowValidationException)
+            {
+                throw CreateAndLogOrchestrationDependencyValidationException(labWorkflowValidationException);
+            }
+            catch (LabWorkflowCommandDependencyException labWorkflowCommandDependencyException)
+            {
+                throw CreateAndLogOrchestrationDependencyException(
+                    labWorkflowCommandDependencyException);
+            }
+            catch (LabWorkflowCommandServiceException labWorkflowCommandServiceException)
+            {
+                throw CreateAndLogOrchestrationDependencyException(
+                    labWorkflowCommandServiceException);
+            }
+            catch (LabWorkflowDependencyException labWorkflowDependencyException)
+            {
+                throw CreateAndLogOrchestrationDependencyException(
+                    labWorkflowDependencyException);
+            }
+            catch (LabWorkflowServiceException labWorkflowServiceException)
+            {
+                throw CreateAndLogOrchestrationDependencyException(
+                    labWorkflowServiceException);
+            }
+            catch (CommandDependencyException commandDependencyException)
+            {
+                throw CreateAndLogOrchestrationDependencyException(
+                    commandDependencyException);
+            }
+            catch (CommandServiceException commandServiceException)
+            {
+                throw CreateAndLogOrchestrationDependencyException(
+                    commandServiceException);
+            }
+            catch (Exception exception)
+            {
+                var failedLabWorkflowOrchestrationServiceException =
+                    new FailedLabWorkflowOrchestrationServiceException(exception);
+
+                throw CreateAndLogOrchestrationServiceException(failedLabWorkflowOrchestrationServiceException);
             }
         }
 

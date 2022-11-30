@@ -5,7 +5,6 @@
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
-using DMX.Agent.Worker.Models.Foundations.Commands;
 using DMX.Agent.Worker.Models.Foundations.Commands.Exceptions;
 using Xeptions;
 
@@ -21,7 +20,7 @@ namespace DMX.Agent.Worker.Services.Foundations.Commands
             {
                 return await returningStringFunction();
             }
-            catch(EmptyCommandException emptyCommandException)
+            catch (EmptyCommandException emptyCommandException)
             {
                 throw CreateAndLogValidationException(emptyCommandException);
             }
@@ -46,7 +45,7 @@ namespace DMX.Agent.Worker.Services.Foundations.Commands
 
                 throw CreateAndLogDependencyException(failedCommandDependencyException);
             }
-            catch(InvalidOperationException invalidOprationException)
+            catch (InvalidOperationException invalidOprationException)
             {
                 var failedCommandDependencyValidationException =
                     new FailedCommandDependencyValidationException(invalidOprationException);
