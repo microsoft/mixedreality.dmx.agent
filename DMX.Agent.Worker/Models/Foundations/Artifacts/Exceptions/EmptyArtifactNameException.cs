@@ -9,7 +9,7 @@ namespace DMX.Agent.Worker.Models.Foundations.Artifacts.Exceptions
     public class EmptyArtifactNameException : Xeption
     {
         public EmptyArtifactNameException()
-            :base(message: "Artifact name is empty. Please contact support")
+            :base(message: "Artifact name or file path is empty. Please contact support")
         { }
     }
 }

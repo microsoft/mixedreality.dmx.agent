@@ -26,7 +26,8 @@ namespace DMX.Agent.Worker.Services.Foundations.Artifacts
         public ValueTask<Response> DownloadArtifactAsync(string labArtifactName, string filePath) =>
             TryCatch(() =>
             {
-                ValidateIfStringIsNull(labArtifactName);
+                ValidateIfStringIsNull(labArtifactName, filePath);
+
                 return this.artifactBroker.DownloadLabArtifactToFilePathAsync(
                     labArtifactName,
                     filePath);
