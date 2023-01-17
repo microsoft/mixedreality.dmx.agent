@@ -23,11 +23,13 @@ namespace DMX.Agent.Worker.Services.Foundations.Artifacts
             this.loggingBroker = loggingBroker;
         }
 
-        public ValueTask<Response> DownloadArtifactAsync(string labArtifactName, string filePath)
-        {
-            return this.artifactBroker.DownloadLabArtifactToFilePathAsync(
-                labArtifactName,
-                filePath);
-        }
+        public ValueTask<Response> DownloadArtifactAsync(string labArtifactName, string filePath) =>
+            TryCatch(() =>
+            {
+                ValidateIfStringIsNull(labArtifactName);
+                return this.artifactBroker.DownloadLabArtifactToFilePathAsync(
+                    labArtifactName,
+                    filePath);
+            });
     }
 }
