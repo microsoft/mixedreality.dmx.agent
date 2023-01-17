@@ -25,7 +25,9 @@ namespace DMX.Agent.Worker.Services.Foundations.Artifacts
 
         public ValueTask<Response> DownloadArtifactAsync(string labArtifactName, string filePath)
         {
-            throw new NotImplementedException();
+            return this.artifactBroker.DownloadLabArtifactToFilePathAsync(
+                labArtifactName,
+                filePath);
         }
     }
 }
