@@ -4,9 +4,13 @@
 
 using DMX.Agent.Worker.Brokers.Blobs;
 using DMX.Agent.Worker.Brokers.Loggings;
+using DMX.Agent.Worker.Models.Foundations.Artifacts.Exceptions;
 using DMX.Agent.Worker.Services.Foundations.Artifacts;
 using Moq;
+using System.Linq.Expressions;
+using System;
 using Tynamix.ObjectFiller;
+using Xeptions;
 
 namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
 {
@@ -25,6 +29,9 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
                 this.ArtifactBrokerMock.Object,
                 this.loggingBrokerMock.Object);
         }
+
+        private Expression<Func<Exception, bool>> SameExceptionAs(Xeption expectedException) =>
+                actualException => actualException.SameExceptionAs(expectedException);
 
         private static string GetRandomString() =>
             new MnemonicString().GetValue();

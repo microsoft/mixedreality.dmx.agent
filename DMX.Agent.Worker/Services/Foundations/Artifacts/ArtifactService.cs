@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DMX.Agent.Worker.Services.Foundations.Artifacts
 {
-    public class ArtifactService : IArtifactService
+    public partial class ArtifactService : IArtifactService
     {
         private readonly IBlobBroker artifactBroker;
         private readonly ILoggingBroker loggingBroker;
