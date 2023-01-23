@@ -5,6 +5,7 @@
 using Azure;
 using DMX.Agent.Worker.Models.Foundations.Artifacts.Exceptions;
 using Microsoft.ServiceBus.Messaging;
+using System.Net;
 using System.Threading.Tasks;
 using Xeptions;
 
@@ -24,7 +25,20 @@ namespace DMX.Agent.Worker.Services.Foundations.Artifacts
             {
                 throw CreateAndLogValidationException(emptyArtifactNameException);
             }
-            catch(RequestFailedException requestFailedException)
+            catch (RequestFailedException requestFailedException)
+                when (requestFailedException.Status
+                    is (int)HttpStatusCode.Unauthorized
+                    or (int)HttpStatusCode.Forbidden
+                    or (int)HttpStatusCode.NotFound)
+            {
+                var failedLabArtifactDependencyException =
+                    new FailedArtifactDependencyException(
+                        requestFailedException);
+
+                throw CreateAndLogCriticalDependencyException(
+                    failedLabArtifactDependencyException);
+            }
+            catch (RequestFailedException requestFailedException)
             {
                 var failedArtifactDependencyException =
                     new FailedArtifactDependencyException(requestFailedException);
@@ -41,6 +55,14 @@ namespace DMX.Agent.Worker.Services.Foundations.Artifacts
             this.loggingBroker.LogError(artifactValidationException);
 
             return artifactValidationException;
+        }
+
+        private ArtifactDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
+        {
+            var artifactDependencyException = new ArtifactDependencyException(exception);
+            this.loggingBroker.LogCritical(artifactDependencyException);
+
+            return artifactDependencyException;
         }
 
         private ArtifactDependencyException CreateAndLogDependencyException(Xeption exception)
