@@ -41,6 +41,11 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
             };
         }
 
+        private static Response GetResponse()
+        {
+            return new Mock<Response>().Object;
+        }
+
         private Expression<Func<Exception, bool>> SameExceptionAs(Xeption expectedException) =>
                 actualException => actualException.SameExceptionAs(expectedException);
 

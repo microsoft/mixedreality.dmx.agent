@@ -21,7 +21,7 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
             // given
             string someArtifactName = GetRandomString();
             string someFilePath = GetRandomString();
-            Response someResponse = new Mock<Response>().Object;
+            Response someResponse = GetResponse();
             Response expectedResponse = someResponse.DeepClone();
 
             this.artifactBrokerMock.Setup(broker =>
@@ -33,7 +33,7 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
             Response actualResponse =
                 await this.artifactService.DownloadArtifactAsync(
                     someArtifactName, someFilePath);
-            
+
             // then
             actualResponse.ToString().Should().BeEquivalentTo(
                 expectedResponse.ToString());
