@@ -215,5 +215,54 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
             this.ArtifactBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowServiceExceptionOnDownloadIfErrorOccursAndLogItAsync()
+        {
+            // given
+            string someFilePath = GetRandomString();
+            string someArtifactName = GetRandomString();
+
+            var exception = new Exception();
+
+            var failedLabArtifactServiceException =
+                new FailedLabArtifactServiceException(
+                    exception);
+
+            var expectedLabArtifactServiceException =
+                new LabArtifactServiceException(
+                    failedLabArtifactServiceException);
+
+            this.ArtifactBrokerMock.Setup(broker =>
+                broker.DownloadLabArtifactToFilePathAsync(
+                    It.IsAny<string>(), It.IsAny<string>()))
+                        .Throws(exception);
+
+            // when
+            ValueTask<Response> downloadArtifactTask =
+                this.ArtifactService.DownloadArtifactAsync(
+                    someArtifactName, someFilePath);
+
+            LabArtifactServiceException actualLabArtifactServiceException =
+                await Assert.ThrowsAsync<LabArtifactServiceException>(
+                    downloadArtifactTask.AsTask);
+
+            // then
+            actualLabArtifactServiceException.Should().BeEquivalentTo(
+                expectedLabArtifactServiceException);
+
+            this.ArtifactBrokerMock.Verify(broker =>
+                broker.DownloadLabArtifactToFilePathAsync(
+                    It.IsAny<string>(), It.IsAny<string>()),
+                        Times.Once());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedLabArtifactServiceException))),
+                        Times.Once());
+
+            this.ArtifactBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
