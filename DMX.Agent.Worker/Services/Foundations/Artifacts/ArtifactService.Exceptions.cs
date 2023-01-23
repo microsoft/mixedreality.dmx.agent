@@ -52,20 +52,29 @@ namespace DMX.Agent.Worker.Services.Foundations.Artifacts
             catch (RequestFailedException requestFailedException)
             {
                 var failedArtifactDependencyException =
-                    new FailedArtifactDependencyException(requestFailedException);
+                    new FailedArtifactDependencyException(
+                        requestFailedException);
 
                 throw CreateAndLogDependencyException(failedArtifactDependencyException);
             }
+            catch (UnauthorizedAccessException unauthorizedAccessException)
+            {
+                var labArtifactFilePathUnauthorizedException =
+                    new LabArtifactFilePathUnauthorizedException(
+                        unauthorizedAccessException);
+                
+                throw CreateAndLogDependencyValidationException(labArtifactFilePathUnauthorizedException);
+            }
         }
 
-        private LabArtifactDependencyValidationException CreateAndLogDependencyValidationException(NotFoundLabArtifactException notFoundLabArtifactException)
+        private LabArtifactDependencyValidationException CreateAndLogDependencyValidationException(Xeption exception)
         {
-            var artifactValidationException =
-                new LabArtifactDependencyValidationException(notFoundLabArtifactException);
+            var labArtifactDependencyValidationException =
+                new LabArtifactDependencyValidationException(exception);
 
-            this.loggingBroker.LogError(artifactValidationException);
+            this.loggingBroker.LogError(labArtifactDependencyValidationException);
 
-            return artifactValidationException;
+            return labArtifactDependencyValidationException;
         }
 
         private ArtifactValidationException CreateAndLogValidationException(Xeption exception)
