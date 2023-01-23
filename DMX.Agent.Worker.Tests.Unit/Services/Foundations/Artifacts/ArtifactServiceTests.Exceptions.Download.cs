@@ -31,14 +31,14 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
             ArtifactDependencyException expectedArtifactDependencyException =
                 new ArtifactDependencyException(failedArtifactDependencyException);
 
-            this.ArtifactBrokerMock.Setup(broker =>
+            this.artifactBrokerMock.Setup(broker =>
                 broker.DownloadLabArtifactToFilePathAsync(
                     It.IsAny<string>(), It.IsAny<string>()))
                         .ThrowsAsync(dependencyException);
 
             // when
             ValueTask<Response> downloadArtifactTask =
-                this.ArtifactService.DownloadArtifactAsync(someArtifactName, someFilePath);
+                this.artifactService.DownloadArtifactAsync(someArtifactName, someFilePath);
 
             ArtifactDependencyException actualArtifactDependencyException =
                 await Assert.ThrowsAsync<ArtifactDependencyException>(
@@ -48,7 +48,7 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
             actualArtifactDependencyException.Should().BeEquivalentTo(
                 expectedArtifactDependencyException);
 
-            this.ArtifactBrokerMock.Verify(broker =>
+            this.artifactBrokerMock.Verify(broker =>
                 broker.DownloadLabArtifactToFilePathAsync(
                     someArtifactName, someFilePath),
                         Times.Once());
@@ -58,7 +58,7 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
                     expectedArtifactDependencyException))),
                         Times.Once());
 
-            this.ArtifactBrokerMock.VerifyNoOtherCalls();
+            this.artifactBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
@@ -84,14 +84,14 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
             var expectedArtifactDependencyException =
                 new ArtifactDependencyException(failedArtifactDependencyException);
 
-            this.ArtifactBrokerMock.Setup(broker =>
+            this.artifactBrokerMock.Setup(broker =>
                 broker.DownloadLabArtifactToFilePathAsync(
                     It.IsAny<string>(), It.IsAny<string>()))
                         .Throws(requestFailedException);
 
             // when
             ValueTask<Response> downloadArtifactTask =
-                this.ArtifactService.DownloadArtifactAsync(someArtifactName, someFilePath);
+                this.artifactService.DownloadArtifactAsync(someArtifactName, someFilePath);
 
             ArtifactDependencyException actualArtifactDependencyException =
                 await Assert.ThrowsAsync<ArtifactDependencyException>(downloadArtifactTask.AsTask);
@@ -100,7 +100,7 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
             actualArtifactDependencyException.Should().BeEquivalentTo(
                 expectedArtifactDependencyException);
 
-            this.ArtifactBrokerMock.Verify(broker =>
+            this.artifactBrokerMock.Verify(broker =>
                 broker.DownloadLabArtifactToFilePathAsync(
                     someArtifactName, someFilePath),
                         Times.Once());
@@ -110,7 +110,7 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
                     expectedArtifactDependencyException))),
                         Times.Once());
 
-            this.ArtifactBrokerMock.VerifyNoOtherCalls();
+            this.artifactBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
@@ -135,14 +135,14 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
             var expectedLabArtifactDependencyValidationException =
                 new LabArtifactDependencyValidationException(notFoundLabArtifactException);
 
-            this.ArtifactBrokerMock.Setup(broker =>
+            this.artifactBrokerMock.Setup(broker =>
                 broker.DownloadLabArtifactToFilePathAsync(
                     It.IsAny<string>(), It.IsAny<string>()))
                         .Throws(requestFailedException);
 
             // when
             ValueTask<Response> downloadArtifactTask =
-                this.ArtifactService.DownloadArtifactAsync(
+                this.artifactService.DownloadArtifactAsync(
                     someArtifactName, someFilePath);
 
             LabArtifactDependencyValidationException actualLabArtifactDependencyValidationException =
@@ -153,7 +153,7 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
             actualLabArtifactDependencyValidationException.Should().BeEquivalentTo(
                 expectedLabArtifactDependencyValidationException);
 
-            this.ArtifactBrokerMock.Verify(broker =>
+            this.artifactBrokerMock.Verify(broker =>
                 broker.DownloadLabArtifactToFilePathAsync(
                     It.IsAny<string>(), It.IsAny<string>()),
                         Times.Once());
@@ -163,7 +163,7 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
                     expectedLabArtifactDependencyValidationException))),
                         Times.Once());
 
-            this.ArtifactBrokerMock.VerifyNoOtherCalls();
+            this.artifactBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
@@ -184,14 +184,14 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
             var expectedLabArtifactDependencyValidationException =
                 new LabArtifactDependencyValidationException(notFoundLabArtifactException);
 
-            this.ArtifactBrokerMock.Setup(broker =>
+            this.artifactBrokerMock.Setup(broker =>
                 broker.DownloadLabArtifactToFilePathAsync(
                     It.IsAny<string>(), It.IsAny<string>()))
                         .Throws(requestFailedException);
 
             // when
             ValueTask<Response> downloadArtifactTask =
-                this.ArtifactService.DownloadArtifactAsync(
+                this.artifactService.DownloadArtifactAsync(
                     someArtifactName, someFilePath);
 
             LabArtifactDependencyValidationException actualLabArtifactDependencyValidationException =
@@ -202,7 +202,7 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
             actualLabArtifactDependencyValidationException.Should().BeEquivalentTo(
                 expectedLabArtifactDependencyValidationException);
 
-            this.ArtifactBrokerMock.Verify(broker =>
+            this.artifactBrokerMock.Verify(broker =>
                 broker.DownloadLabArtifactToFilePathAsync(
                     It.IsAny<string>(), It.IsAny<string>()),
                         Times.Once());
@@ -212,7 +212,7 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
                     expectedLabArtifactDependencyValidationException))),
                         Times.Once());
 
-            this.ArtifactBrokerMock.VerifyNoOtherCalls();
+            this.artifactBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
 
@@ -233,14 +233,14 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
                 new LabArtifactServiceException(
                     failedLabArtifactServiceException);
 
-            this.ArtifactBrokerMock.Setup(broker =>
+            this.artifactBrokerMock.Setup(broker =>
                 broker.DownloadLabArtifactToFilePathAsync(
                     It.IsAny<string>(), It.IsAny<string>()))
                         .Throws(exception);
 
             // when
             ValueTask<Response> downloadArtifactTask =
-                this.ArtifactService.DownloadArtifactAsync(
+                this.artifactService.DownloadArtifactAsync(
                     someArtifactName, someFilePath);
 
             LabArtifactServiceException actualLabArtifactServiceException =
@@ -251,7 +251,7 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
             actualLabArtifactServiceException.Should().BeEquivalentTo(
                 expectedLabArtifactServiceException);
 
-            this.ArtifactBrokerMock.Verify(broker =>
+            this.artifactBrokerMock.Verify(broker =>
                 broker.DownloadLabArtifactToFilePathAsync(
                     It.IsAny<string>(), It.IsAny<string>()),
                         Times.Once());
@@ -261,7 +261,7 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
                     expectedLabArtifactServiceException))),
                         Times.Once());
 
-            this.ArtifactBrokerMock.VerifyNoOtherCalls();
+            this.artifactBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }

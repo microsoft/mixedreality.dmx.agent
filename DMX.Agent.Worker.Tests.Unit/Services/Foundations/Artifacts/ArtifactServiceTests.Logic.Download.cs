@@ -24,27 +24,27 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
             Response someResponse = new Mock<Response>().Object;
             Response expectedResponse = someResponse.DeepClone();
 
-            this.ArtifactBrokerMock.Setup(broker =>
+            this.artifactBrokerMock.Setup(broker =>
                 broker.DownloadLabArtifactToFilePathAsync(
                     It.IsAny<string>(), It.IsAny<string>()))
                         .ReturnsAsync(someResponse);
 
             // when
             Response actualResponse =
-                await this.ArtifactService.DownloadArtifactAsync(
+                await this.artifactService.DownloadArtifactAsync(
                     someArtifactName, someFilePath);
             
             // then
             actualResponse.ToString().Should().BeEquivalentTo(
                 expectedResponse.ToString());
 
-            this.ArtifactBrokerMock.Verify(broker =>
+            this.artifactBrokerMock.Verify(broker =>
                 broker.DownloadLabArtifactToFilePathAsync(
                     someArtifactName,
                     someFilePath),
                         Times.Once);
 
-            this.ArtifactBrokerMock.VerifyNoOtherCalls();
+            this.artifactBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }

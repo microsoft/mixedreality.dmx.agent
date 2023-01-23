@@ -31,7 +31,7 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
 
             // when
             ValueTask<Response> downloadArtifactTask = 
-                this.ArtifactService.DownloadArtifactAsync(nullArtifactName, nullFilePath);
+                this.artifactService.DownloadArtifactAsync(nullArtifactName, nullFilePath);
 
             ArtifactValidationException actualArtifactValidationException =
                 await Assert.ThrowsAsync<ArtifactValidationException>(
@@ -46,13 +46,13 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
                     expectedArtifactValidationException))),
                         Times.Once);
 
-            this.ArtifactBrokerMock.Verify(broker =>
+            this.artifactBrokerMock.Verify(broker =>
                 broker.DownloadLabArtifactToFilePathAsync(
                     It.IsAny<string>(), 
                     It.IsAny<string>()),
                         Times.Never);
 
-            this.ArtifactBrokerMock.VerifyNoOtherCalls();
+            this.artifactBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
     }

@@ -19,17 +19,17 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
 {
     public partial class ArtifactServiceTests
     {
-        private readonly Mock<IBlobBroker> ArtifactBrokerMock;
+        private readonly Mock<IBlobBroker> artifactBrokerMock;
         private readonly Mock<ILoggingBroker> loggingBrokerMock;
-        private readonly IArtifactService ArtifactService;
+        private readonly IArtifactService artifactService;
 
         public ArtifactServiceTests()
         {
-            this.ArtifactBrokerMock = new Mock<IBlobBroker>();
+            this.artifactBrokerMock = new Mock<IBlobBroker>();
             this.loggingBrokerMock = new Mock<ILoggingBroker>();
 
-            this.ArtifactService = new ArtifactService(
-                this.ArtifactBrokerMock.Object,
+            this.artifactService = new ArtifactService(
+                this.artifactBrokerMock.Object,
                 this.loggingBrokerMock.Object);
         }
 
