@@ -3,7 +3,7 @@
 // ---------------------------------------------------------------
 
 using Azure;
-using DMX.Agent.Worker.Models.Foundations.Artifacts.Exceptions;
+using DMX.Agent.Worker.Models.Foundations.LabArtifacts.Exceptions;
 using FluentAssertions;
 using Moq;
 using System.Threading.Tasks;
@@ -23,18 +23,18 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
             string nullArtifactName = invalidString;
             string nullFilePath = invalidString;
             
-            EmptyArtifactNameException emptyArtifactNameException =
-                new EmptyArtifactNameException();
+            EmptyLabArtifactNameException emptyArtifactNameException =
+                new EmptyLabArtifactNameException();
 
-            ArtifactValidationException expectedArtifactValidationException =
-                new ArtifactValidationException(emptyArtifactNameException);
+            LabArtifactValidationException expectedArtifactValidationException =
+                new LabArtifactValidationException(emptyArtifactNameException);
 
             // when
             ValueTask<Response> downloadArtifactTask = 
                 this.artifactService.DownloadArtifactAsync(nullArtifactName, nullFilePath);
 
-            ArtifactValidationException actualArtifactValidationException =
-                await Assert.ThrowsAsync<ArtifactValidationException>(
+            LabArtifactValidationException actualArtifactValidationException =
+                await Assert.ThrowsAsync<LabArtifactValidationException>(
                     downloadArtifactTask.AsTask);
 
             // then

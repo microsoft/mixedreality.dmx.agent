@@ -3,7 +3,6 @@
 // ---------------------------------------------------------------
 
 using Azure;
-using DMX.Agent.Worker.Models.Foundations.Artifacts.Exceptions;
 using DMX.Agent.Worker.Models.Foundations.LabArtifacts.Exceptions;
 using Microsoft.ServiceBus.Messaging;
 using System;
@@ -23,7 +22,7 @@ namespace DMX.Agent.Worker.Services.Foundations.Artifacts
             {
                 return await returningResponseFunction();
             }
-            catch (EmptyArtifactNameException emptyArtifactNameException)
+            catch (EmptyLabArtifactNameException emptyArtifactNameException)
             {
                 throw CreateAndLogValidationException(emptyArtifactNameException);
             }
@@ -33,7 +32,7 @@ namespace DMX.Agent.Worker.Services.Foundations.Artifacts
                     or (int)HttpStatusCode.Forbidden)
             {
                 var failedLabArtifactDependencyException =
-                    new FailedArtifactDependencyException(
+                    new FailedLabArtifactDependencyException(
                         requestFailedException);
 
                 throw CreateAndLogCriticalDependencyException(
@@ -52,7 +51,7 @@ namespace DMX.Agent.Worker.Services.Foundations.Artifacts
             catch (RequestFailedException requestFailedException)
             {
                 var failedArtifactDependencyException =
-                    new FailedArtifactDependencyException(
+                    new FailedLabArtifactDependencyException(
                         requestFailedException);
 
                 throw CreateAndLogDependencyException(failedArtifactDependencyException);
@@ -94,27 +93,27 @@ namespace DMX.Agent.Worker.Services.Foundations.Artifacts
             return labArtifactDependencyValidationException;
         }
 
-        private ArtifactValidationException CreateAndLogValidationException(Xeption exception)
+        private LabArtifactValidationException CreateAndLogValidationException(Xeption exception)
         {
             var artifactValidationException =
-                new ArtifactValidationException(exception);
+                new LabArtifactValidationException(exception);
 
             this.loggingBroker.LogError(artifactValidationException);
 
             return artifactValidationException;
         }
 
-        private ArtifactDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
+        private LabArtifactDependencyException CreateAndLogCriticalDependencyException(Xeption exception)
         {
-            var artifactDependencyException = new ArtifactDependencyException(exception);
+            var artifactDependencyException = new LabArtifactDependencyException(exception);
             this.loggingBroker.LogCritical(artifactDependencyException);
 
             return artifactDependencyException;
         }
 
-        private ArtifactDependencyException CreateAndLogDependencyException(Xeption exception)
+        private LabArtifactDependencyException CreateAndLogDependencyException(Xeption exception)
         {
-            var artifactDependencyException = new ArtifactDependencyException(exception);
+            var artifactDependencyException = new LabArtifactDependencyException(exception);
             this.loggingBroker.LogError(artifactDependencyException);
 
             return artifactDependencyException;

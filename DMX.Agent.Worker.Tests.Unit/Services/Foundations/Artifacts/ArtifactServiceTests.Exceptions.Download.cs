@@ -3,7 +3,6 @@
 // ---------------------------------------------------------------
 
 using Azure;
-using DMX.Agent.Worker.Models.Foundations.Artifacts.Exceptions;
 using DMX.Agent.Worker.Models.Foundations.LabArtifacts.Exceptions;
 using FluentAssertions;
 using Moq;
@@ -25,11 +24,11 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
             string someFilePath = GetRandomString();
             string someArtifactName = GetRandomString();
 
-            FailedArtifactDependencyException failedArtifactDependencyException =
-                new FailedArtifactDependencyException(dependencyException);
+            FailedLabArtifactDependencyException failedArtifactDependencyException =
+                new FailedLabArtifactDependencyException(dependencyException);
 
-            ArtifactDependencyException expectedArtifactDependencyException =
-                new ArtifactDependencyException(failedArtifactDependencyException);
+            LabArtifactDependencyException expectedArtifactDependencyException =
+                new LabArtifactDependencyException(failedArtifactDependencyException);
 
             this.artifactBrokerMock.Setup(broker =>
                 broker.DownloadLabArtifactToFilePathAsync(
@@ -40,8 +39,8 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
             ValueTask<Response> downloadArtifactTask =
                 this.artifactService.DownloadArtifactAsync(someArtifactName, someFilePath);
 
-            ArtifactDependencyException actualArtifactDependencyException =
-                await Assert.ThrowsAsync<ArtifactDependencyException>(
+            LabArtifactDependencyException actualArtifactDependencyException =
+                await Assert.ThrowsAsync<LabArtifactDependencyException>(
                     downloadArtifactTask.AsTask);
 
             // then
@@ -79,10 +78,10 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
                     randomMessage);
 
             var failedArtifactDependencyException =
-                new FailedArtifactDependencyException(requestFailedException);
+                new FailedLabArtifactDependencyException(requestFailedException);
 
             var expectedArtifactDependencyException =
-                new ArtifactDependencyException(failedArtifactDependencyException);
+                new LabArtifactDependencyException(failedArtifactDependencyException);
 
             this.artifactBrokerMock.Setup(broker =>
                 broker.DownloadLabArtifactToFilePathAsync(
@@ -93,8 +92,8 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
             ValueTask<Response> downloadArtifactTask =
                 this.artifactService.DownloadArtifactAsync(someArtifactName, someFilePath);
 
-            ArtifactDependencyException actualArtifactDependencyException =
-                await Assert.ThrowsAsync<ArtifactDependencyException>(downloadArtifactTask.AsTask);
+            LabArtifactDependencyException actualArtifactDependencyException =
+                await Assert.ThrowsAsync<LabArtifactDependencyException>(downloadArtifactTask.AsTask);
 
             // then
             actualArtifactDependencyException.Should().BeEquivalentTo(

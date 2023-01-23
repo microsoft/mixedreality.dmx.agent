@@ -12,4 +12,8 @@
     <PackageReference Include="RESTFulSense" Version="2.9.0" />
     <PackageReference Include="WindowsAzure.ServiceBus" Version="6.2.2" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\Foundations\Artifacts\Exceptions\" />
+  </ItemGroup>
 </Project>

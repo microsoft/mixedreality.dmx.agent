@@ -4,7 +4,6 @@
 
 using DMX.Agent.Worker.Brokers.Blobs;
 using DMX.Agent.Worker.Brokers.Loggings;
-using DMX.Agent.Worker.Models.Foundations.Artifacts.Exceptions;
 using DMX.Agent.Worker.Services.Foundations.Artifacts;
 using Moq;
 using System.Linq.Expressions;
@@ -13,7 +12,6 @@ using Tynamix.ObjectFiller;
 using Xeptions;
 using Azure;
 using Xunit;
-using Azure.Storage.Blobs.Models;
 
 namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
 {

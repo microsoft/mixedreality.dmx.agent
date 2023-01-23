@@ -2,7 +2,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ---------------------------------------------------------------
 
-using DMX.Agent.Worker.Models.Foundations.Artifacts.Exceptions;
+using DMX.Agent.Worker.Models.Foundations.LabArtifacts.Exceptions;
 
 namespace DMX.Agent.Worker.Services.Foundations.Artifacts
 {
@@ -12,7 +12,7 @@ namespace DMX.Agent.Worker.Services.Foundations.Artifacts
         {
             if (string.IsNullOrWhiteSpace(artifactName) || string.IsNullOrWhiteSpace(filepath))
             {
-                throw new EmptyArtifactNameException();
+                throw new EmptyLabArtifactNameException();
             }
         }
     }
