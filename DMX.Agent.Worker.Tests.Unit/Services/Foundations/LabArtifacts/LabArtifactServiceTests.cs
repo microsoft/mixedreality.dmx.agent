@@ -15,13 +15,13 @@ using Xunit;
 
 namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
 {
-    public partial class ArtifactServiceTests
+    public partial class LabArtifactServiceTests
     {
         private readonly Mock<IBlobBroker> artifactBrokerMock;
         private readonly Mock<ILoggingBroker> loggingBrokerMock;
         private readonly IArtifactService artifactService;
 
-        public ArtifactServiceTests()
+        public LabArtifactServiceTests()
         {
             this.artifactBrokerMock = new Mock<IBlobBroker>();
             this.loggingBrokerMock = new Mock<ILoggingBroker>();

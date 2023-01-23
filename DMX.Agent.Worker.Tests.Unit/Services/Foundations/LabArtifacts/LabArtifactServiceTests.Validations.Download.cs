@@ -11,7 +11,7 @@ using Xunit;
 
 namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
 {
-    public partial class ArtifactServiceTests
+    public partial class LabArtifactServiceTests
     {
         [Theory]
         [InlineData("")]
