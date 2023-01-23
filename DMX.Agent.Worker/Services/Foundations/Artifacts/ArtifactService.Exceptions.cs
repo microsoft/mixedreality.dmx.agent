@@ -65,6 +65,23 @@ namespace DMX.Agent.Worker.Services.Foundations.Artifacts
                 
                 throw CreateAndLogDependencyValidationException(labArtifactFilePathUnauthorizedException);
             }
+            catch (Exception exception)
+            {
+                var failedLabArtifactServiceException =
+                    new FailedLabArtifactServiceException(exception);
+
+                throw CreateAndLogServiceException(failedLabArtifactServiceException);
+            }
+        }
+
+        private Exception CreateAndLogServiceException(FailedLabArtifactServiceException failedLabArtifactServiceException)
+        {
+            var labArtifactServiceException =
+                new LabArtifactServiceException(failedLabArtifactServiceException);
+
+            this.loggingBroker.LogError(labArtifactServiceException);
+
+            return labArtifactServiceException;
         }
 
         private LabArtifactDependencyValidationException CreateAndLogDependencyValidationException(Xeption exception)
