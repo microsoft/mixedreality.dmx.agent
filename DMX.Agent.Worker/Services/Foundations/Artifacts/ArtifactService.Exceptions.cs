@@ -28,8 +28,7 @@ namespace DMX.Agent.Worker.Services.Foundations.Artifacts
             catch (RequestFailedException requestFailedException)
                 when (requestFailedException.Status
                     is (int)HttpStatusCode.Unauthorized
-                    or (int)HttpStatusCode.Forbidden
-                    or (int)HttpStatusCode.NotFound)
+                    or (int)HttpStatusCode.Forbidden)
             {
                 var failedLabArtifactDependencyException =
                     new FailedArtifactDependencyException(

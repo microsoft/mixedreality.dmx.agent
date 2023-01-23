@@ -4,6 +4,7 @@
 
 using Azure;
 using DMX.Agent.Worker.Models.Foundations.Artifacts.Exceptions;
+using DMX.Agent.Worker.Models.Foundations.LabArtifacts.Exceptions;
 using FluentAssertions;
 using Moq;
 using System;
@@ -64,9 +65,8 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
         [Theory]
         [InlineData((int)HttpStatusCode.Unauthorized)]
         [InlineData((int)HttpStatusCode.Forbidden)]
-        [InlineData((int)HttpStatusCode.NotFound)]
         public async Task ShouldThrowCriticalDependencyExceptionOnDownloadIfCriticalErrorOccursAndLogItAsync(
-    int crititicalStatusCode)
+            int crititicalStatusCode)
         {
             // given
             string randomMessage = GetRandomString();
@@ -108,6 +108,59 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
             this.loggingBrokerMock.Verify(broker =>
                 broker.LogCritical(It.Is(SameExceptionAs(
                     expectedArtifactDependencyException))),
+                        Times.Once());
+
+            this.ArtifactBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
+
+        [Theory]
+        [InlineData((int)HttpStatusCode.NotFound)]
+        public async Task ShouldThrowDependencyValidationExceptionOnDownloadIfLabArtifactNotFoundErrorOccursAndLogItAsync(
+            int notFoundStatusCode)
+        {
+            // given
+            string randomMessage = GetRandomString();
+            string someFilePath = GetRandomString();
+            string someArtifactName = GetRandomString();
+
+            var requestFailedException =
+                new RequestFailedException(
+                    notFoundStatusCode,
+                    randomMessage);
+
+            var notFoundLabArtifactException =
+                new NotFoundLabArtifactException(requestFailedException);
+
+            var expectedLabArtifactDependencyValidationException =
+                new LabArtifactDependencyValidationException(notFoundLabArtifactException);
+
+            this.ArtifactBrokerMock.Setup(broker =>
+                broker.DownloadLabArtifactToFilePathAsync(
+                    It.IsAny<string>(), It.IsAny<string>()))
+                        .Throws(requestFailedException);
+
+            // when
+            ValueTask<Response> downloadArtifactTask =
+                this.ArtifactService.DownloadArtifactAsync(
+                    someArtifactName, someFilePath);
+
+            ArtifactDependencyException actualArtifactDependencyException =
+                await Assert.ThrowsAsync<ArtifactDependencyException>(
+                    downloadArtifactTask.AsTask);
+
+            // then
+            actualArtifactDependencyException.Should().BeEquivalentTo(
+                expectedLabArtifactDependencyValidationException);
+
+            this.ArtifactBrokerMock.Verify(broker =>
+                broker.DownloadLabArtifactToFilePathAsync(
+                    It.IsAny<string>(), It.IsAny<string>()),
+                        Times.Once());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedLabArtifactDependencyValidationException))),
                         Times.Once());
 
             this.ArtifactBrokerMock.VerifyNoOtherCalls();
