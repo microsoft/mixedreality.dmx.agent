@@ -166,5 +166,54 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
             this.ArtifactBrokerMock.VerifyNoOtherCalls();
             this.loggingBrokerMock.VerifyNoOtherCalls();
         }
+
+        [Fact]
+        public async Task ShouldThrowDependencyValidationExceptionOnDownloadIfPathIsNotAccessibleErrorOccursAndLogItAsync()
+        {
+            // given
+            string randomMessage = GetRandomString();
+            string someFilePath = GetRandomString();
+            string someArtifactName = GetRandomString();
+
+            var requestFailedException =
+                new UnauthorizedAccessException(randomMessage);
+
+            var notFoundLabArtifactException =
+                new LabArtifactFilePathUnauthorizedException(requestFailedException);
+
+            var expectedLabArtifactDependencyValidationException =
+                new LabArtifactDependencyValidationException(notFoundLabArtifactException);
+
+            this.ArtifactBrokerMock.Setup(broker =>
+                broker.DownloadLabArtifactToFilePathAsync(
+                    It.IsAny<string>(), It.IsAny<string>()))
+                        .Throws(requestFailedException);
+
+            // when
+            ValueTask<Response> downloadArtifactTask =
+                this.ArtifactService.DownloadArtifactAsync(
+                    someArtifactName, someFilePath);
+
+            LabArtifactDependencyValidationException actualLabArtifactDependencyValidationException =
+                await Assert.ThrowsAsync<LabArtifactDependencyValidationException>(
+                    downloadArtifactTask.AsTask);
+
+            // then
+            actualLabArtifactDependencyValidationException.Should().BeEquivalentTo(
+                expectedLabArtifactDependencyValidationException);
+
+            this.ArtifactBrokerMock.Verify(broker =>
+                broker.DownloadLabArtifactToFilePathAsync(
+                    It.IsAny<string>(), It.IsAny<string>()),
+                        Times.Once());
+
+            this.loggingBrokerMock.Verify(broker =>
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedLabArtifactDependencyValidationException))),
+                        Times.Once());
+
+            this.ArtifactBrokerMock.VerifyNoOtherCalls();
+            this.loggingBrokerMock.VerifyNoOtherCalls();
+        }
     }
 }
