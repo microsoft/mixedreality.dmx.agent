@@ -2,13 +2,11 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ---------------------------------------------------------------
 
+using System.Threading.Tasks;
 using Azure;
 using FluentAssertions;
 using Force.DeepCloner;
 using Moq;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts

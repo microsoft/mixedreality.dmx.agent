@@ -2,10 +2,10 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ---------------------------------------------------------------
 
+using System.Threading.Tasks;
 using Azure;
 using DMX.Agent.Worker.Brokers.Blobs;
 using DMX.Agent.Worker.Brokers.Loggings;
-using System.Threading.Tasks;
 
 namespace DMX.Agent.Worker.Services.Foundations.Artifacts
 {

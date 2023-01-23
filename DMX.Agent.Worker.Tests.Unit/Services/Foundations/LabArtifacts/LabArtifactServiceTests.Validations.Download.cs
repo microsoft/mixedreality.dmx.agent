@@ -2,11 +2,11 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ---------------------------------------------------------------
 
+using System.Threading.Tasks;
 using Azure;
 using DMX.Agent.Worker.Models.Foundations.LabArtifacts.Exceptions;
 using FluentAssertions;
 using Moq;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
@@ -22,7 +22,7 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
             // given
             string nullArtifactName = invalidString;
             string nullFilePath = invalidString;
-            
+
             EmptyLabArtifactNameException emptyArtifactNameException =
                 new EmptyLabArtifactNameException();
 
@@ -30,7 +30,7 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
                 new LabArtifactValidationException(emptyArtifactNameException);
 
             // when
-            ValueTask<Response> downloadArtifactTask = 
+            ValueTask<Response> downloadArtifactTask =
                 this.artifactService.DownloadArtifactAsync(nullArtifactName, nullFilePath);
 
             LabArtifactValidationException actualArtifactValidationException =
@@ -48,7 +48,7 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
 
             this.artifactBrokerMock.Verify(broker =>
                 broker.DownloadLabArtifactToFilePathAsync(
-                    It.IsAny<string>(), 
+                    It.IsAny<string>(),
                     It.IsAny<string>()),
                         Times.Never);
 

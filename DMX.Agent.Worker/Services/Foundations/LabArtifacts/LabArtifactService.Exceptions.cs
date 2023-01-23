@@ -2,12 +2,11 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ---------------------------------------------------------------
 
-using Azure;
-using DMX.Agent.Worker.Models.Foundations.LabArtifacts.Exceptions;
-using Microsoft.ServiceBus.Messaging;
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using Azure;
+using DMX.Agent.Worker.Models.Foundations.LabArtifacts.Exceptions;
 using Xeptions;
 
 namespace DMX.Agent.Worker.Services.Foundations.Artifacts
@@ -61,7 +60,7 @@ namespace DMX.Agent.Worker.Services.Foundations.Artifacts
                 var labArtifactFilePathUnauthorizedException =
                     new LabArtifactFilePathUnauthorizedException(
                         unauthorizedAccessException);
-                
+
                 throw CreateAndLogDependencyValidationException(labArtifactFilePathUnauthorizedException);
             }
             catch (Exception exception)

@@ -2,13 +2,13 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ---------------------------------------------------------------
 
+using System;
+using System.Net;
+using System.Threading.Tasks;
 using Azure;
 using DMX.Agent.Worker.Models.Foundations.LabArtifacts.Exceptions;
 using FluentAssertions;
 using Moq;
-using System;
-using System.Net;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts

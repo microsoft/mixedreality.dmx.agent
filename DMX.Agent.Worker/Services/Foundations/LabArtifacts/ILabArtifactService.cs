@@ -2,8 +2,8 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ---------------------------------------------------------------
 
-using Azure;
 using System.Threading.Tasks;
+using Azure;
 
 namespace DMX.Agent.Worker.Services.Foundations.Artifacts
 {

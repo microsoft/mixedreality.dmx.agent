@@ -2,15 +2,15 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ---------------------------------------------------------------
 
+using System;
+using System.Linq.Expressions;
+using Azure;
 using DMX.Agent.Worker.Brokers.Blobs;
 using DMX.Agent.Worker.Brokers.Loggings;
 using DMX.Agent.Worker.Services.Foundations.Artifacts;
 using Moq;
-using System.Linq.Expressions;
-using System;
 using Tynamix.ObjectFiller;
 using Xeptions;
-using Azure;
 using Xunit;
 
 namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
