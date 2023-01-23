@@ -145,12 +145,12 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
                 this.ArtifactService.DownloadArtifactAsync(
                     someArtifactName, someFilePath);
 
-            ArtifactDependencyException actualArtifactDependencyException =
-                await Assert.ThrowsAsync<ArtifactDependencyException>(
+            LabArtifactDependencyValidationException actualLabArtifactDependencyValidationException =
+                await Assert.ThrowsAsync<LabArtifactDependencyValidationException>(
                     downloadArtifactTask.AsTask);
 
             // then
-            actualArtifactDependencyException.Should().BeEquivalentTo(
+            actualLabArtifactDependencyValidationException.Should().BeEquivalentTo(
                 expectedLabArtifactDependencyValidationException);
 
             this.ArtifactBrokerMock.Verify(broker =>

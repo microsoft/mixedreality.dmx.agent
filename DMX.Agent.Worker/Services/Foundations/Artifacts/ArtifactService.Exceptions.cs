@@ -4,7 +4,9 @@
 
 using Azure;
 using DMX.Agent.Worker.Models.Foundations.Artifacts.Exceptions;
+using DMX.Agent.Worker.Models.Foundations.LabArtifacts.Exceptions;
 using Microsoft.ServiceBus.Messaging;
+using System;
 using System.Net;
 using System.Threading.Tasks;
 using Xeptions;
@@ -38,6 +40,16 @@ namespace DMX.Agent.Worker.Services.Foundations.Artifacts
                     failedLabArtifactDependencyException);
             }
             catch (RequestFailedException requestFailedException)
+                when (requestFailedException.Status
+                    is (int)HttpStatusCode.NotFound)
+            {
+                var notFoundLabArtifactException =
+                    new NotFoundLabArtifactException(
+                        requestFailedException);
+
+                throw CreateAndLogDependencyValidationException(notFoundLabArtifactException);
+            }
+            catch (RequestFailedException requestFailedException)
             {
                 var failedArtifactDependencyException =
                     new FailedArtifactDependencyException(requestFailedException);
@@ -46,9 +58,19 @@ namespace DMX.Agent.Worker.Services.Foundations.Artifacts
             }
         }
 
+        private LabArtifactDependencyValidationException CreateAndLogDependencyValidationException(NotFoundLabArtifactException notFoundLabArtifactException)
+        {
+            var artifactValidationException =
+                new LabArtifactDependencyValidationException(notFoundLabArtifactException);
+
+            this.loggingBroker.LogError(artifactValidationException);
+
+            return artifactValidationException;
+        }
+
         private ArtifactValidationException CreateAndLogValidationException(Xeption exception)
         {
-            ArtifactValidationException artifactValidationException =
+            var artifactValidationException =
                 new ArtifactValidationException(exception);
 
             this.loggingBroker.LogError(artifactValidationException);
