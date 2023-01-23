@@ -5,17 +5,16 @@
 using Azure;
 using DMX.Agent.Worker.Brokers.Blobs;
 using DMX.Agent.Worker.Brokers.Loggings;
-using System;
 using System.Threading.Tasks;
 
 namespace DMX.Agent.Worker.Services.Foundations.Artifacts
 {
-    public partial class ArtifactService : IArtifactService
+    public partial class LabArtifactService : ILabArtifactService
     {
         private readonly IBlobBroker artifactBroker;
         private readonly ILoggingBroker loggingBroker;
 
-        public ArtifactService(
+        public LabArtifactService(
             IBlobBroker artifactBroker,
             ILoggingBroker loggingBroker)
         {

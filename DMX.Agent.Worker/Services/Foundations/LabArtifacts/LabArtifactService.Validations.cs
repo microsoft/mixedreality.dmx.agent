@@ -6,7 +6,7 @@ using DMX.Agent.Worker.Models.Foundations.LabArtifacts.Exceptions;
 
 namespace DMX.Agent.Worker.Services.Foundations.Artifacts
 {
-    public partial class ArtifactService
+    public partial class LabArtifactService
     {
         public static void ValidateIfStringIsNull(string artifactName, string filepath)
         {

@@ -12,7 +12,7 @@ using Xeptions;
 
 namespace DMX.Agent.Worker.Services.Foundations.Artifacts
 {
-    public partial class ArtifactService
+    public partial class LabArtifactService
     {
         private delegate ValueTask<Response> ReturningResponseFunction();
 

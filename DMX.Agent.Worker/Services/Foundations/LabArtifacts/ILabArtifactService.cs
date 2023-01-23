@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DMX.Agent.Worker.Services.Foundations.Artifacts
 {
-    public interface IArtifactService
+    public interface ILabArtifactService
     {
         ValueTask<Response> DownloadArtifactAsync(string labArtifactName, string filePath);
     }
