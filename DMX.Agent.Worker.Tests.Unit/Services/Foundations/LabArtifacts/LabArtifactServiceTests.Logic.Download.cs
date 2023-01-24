@@ -24,7 +24,7 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.Artifacts
 
             this.artifactBrokerMock.Setup(broker =>
                 broker.DownloadLabArtifactToFilePathAsync(
-                    It.IsAny<string>(), It.IsAny<string>()))
+                    someArtifactName, someFilePath))
                         .ReturnsAsync(someResponse);
 
             // when
