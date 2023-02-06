@@ -9,7 +9,7 @@ namespace DMX.Agent.Worker.Models.Foundations.Commands.Exceptions
     public class CommandDependencyException : Xeption
     {
         public CommandDependencyException(Xeption exception)
-            : base(message: "Command dependency error occurred. Please cntact support",
+            : base(message: "Command dependency error occurred. Please contact support",
                  exception)
         { }
     }
