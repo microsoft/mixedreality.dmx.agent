@@ -25,9 +25,9 @@ namespace DMX.Agent.Worker.Services.Foundations.LabWorkflowCommandEvents
 
         public void RegisterLabWorkflowCommandEventHandler(
             Func<LabWorkflowCommand, ValueTask> labWorkflowCommandEventHandler,
-            string eventName = null)
-        {
-            throw new NotImplementedException();
-        }
+            string eventName = null) =>
+            this.eventBroker.ListenToLabWorkflowCommandEvent(
+                labWorkflowCommandEventHandler,
+                eventName);
     }
 }
