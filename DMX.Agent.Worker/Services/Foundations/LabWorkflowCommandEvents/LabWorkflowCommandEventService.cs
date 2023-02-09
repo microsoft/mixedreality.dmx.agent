@@ -3,6 +3,7 @@
 // ---------------------------------------------------------------
 
 using System;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using DMX.Agent.Worker.Brokers.Events;
 using DMX.Agent.Worker.Brokers.Loggings;
@@ -25,9 +26,13 @@ namespace DMX.Agent.Worker.Services.Foundations.LabWorkflowCommandEvents
 
         public void RegisterLabWorkflowCommandEventHandler(
             Func<LabWorkflowCommand, ValueTask> labWorkflowCommandEventHandler,
-            string eventName = null) =>
+            string eventName = null) => TryCatch(() =>
+        {
+            ValidateLabWorkflowCommandEventHandler(labWorkflowCommandEventHandler);
+            
             this.eventBroker.ListenToLabWorkflowCommandEvent(
                 labWorkflowCommandEventHandler,
                 eventName);
+        });
     }
 }

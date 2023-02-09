@@ -30,22 +30,22 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.LabWorkflowCommandEve
                     nullLabWorkflowCommandEventHandlerException);
 
             // when
-            Action registerLabWorkflowCommandEventHandler = () =>
+            Action registerLabWorkflowCommandEventHandlerAction = () =>
                 this.labWorkflowCommandEventService.RegisterLabWorkflowCommandEventHandler(
                     nullLabWorkflowCommandEventHandler,
                     inputEventName);
 
             LabWorkflowCommandEventValidationException actualLabWorkflowCommandEventValidationException =
                 Assert.Throws<LabWorkflowCommandEventValidationException>(
-                    registerLabWorkflowCommandEventHandler);
+                    registerLabWorkflowCommandEventHandlerAction);
 
             // then
             actualLabWorkflowCommandEventValidationException.Should().BeEquivalentTo(
                 expectedLabWorkflowCommandEventValidationException);
 
             this.loggingBrokerMock.Verify(broker =>
-                broker.LogError(
-                    expectedLabWorkflowCommandEventValidationException),
+                broker.LogError(It.Is(SameExceptionAs(
+                    expectedLabWorkflowCommandEventValidationException))),
                         Times.Once);
 
             this.eventBrokerMock.Verify(broker =>

@@ -2,11 +2,14 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // ---------------------------------------------------------------
 
+using System;
+using System.Linq.Expressions;
 using DMX.Agent.Worker.Brokers.Events;
 using DMX.Agent.Worker.Brokers.Loggings;
 using DMX.Agent.Worker.Services.Foundations.LabWorkflowCommandEvents;
 using Moq;
 using Tynamix.ObjectFiller;
+using Xeptions;
 
 namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.LabWorkflowCommandEvents
 {
@@ -28,5 +31,8 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.LabWorkflowCommandEve
 
         private string GetRandomEventName() =>
             new MnemonicString().GetValue();
+
+        private Expression<Func<Xeption, bool>> SameExceptionAs(Xeption expectedException) =>
+            actualException => actualException.SameExceptionAs(expectedException);
     }
 }
