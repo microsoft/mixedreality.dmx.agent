@@ -15,7 +15,7 @@ namespace DMX.Agent.Worker.Tests.Unit.Services.Foundations.LabWorkflowCommandEve
     public partial class LabWorkflowCommandEventServiceTests
     {
         [Fact]
-        public void ShouldThrowValidationExceptionOnRegisterIfLabWorkflowCommandEventHandlerIsNullAndLogItAsync()
+        public void ShouldThrowValidationExceptionOnRegisterIfLabWorkflowCommandEventHandlerIsNullAndLogIt()
         {
             // given
             Func<LabWorkflowCommand, ValueTask> nullLabWorkflowCommandEventHandler = null;
